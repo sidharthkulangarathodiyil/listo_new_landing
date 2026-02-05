@@ -1,0 +1,717 @@
+<html lang="en" class="dark scroll-smooth" id="html-root"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Listo - A Smarter Brokerage Model for Today’s Real Estate Professionals.">
+<title>Listo | The Next-Gen Real Estate Brokerage</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+        serif: ['Newsreader', 'serif'],
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.5s ease-out forwards',
+        'blob': 'blob 10s infinite',
+        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'slide-up-delayed': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(30px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        blob: {
+          '0%': { transform: 'translate(0px, 0px) scale(1)' },
+          '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+          '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+          '100%': { transform: 'translate(0px, 0px) scale(1)' },
+        },
+      },
+    },
+  },
+};
+</script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Newsreader:ital,opsz,wght@0,6..72,200..600;1,6..72,200..600&amp;display=swap" rel="stylesheet">
+
+<style>
+  /* Base Styles & Transitions */
+  body, .bg-transition, div, nav, button, section, span, p, h1, h2, h3, input, textarea, label {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+  body {
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+    --mouse-x: 50vw;
+    --mouse-y: 50vh;
+  }
+  
+  /* Spotlight Effect */
+  .spotlight-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(16, 185, 129, 0.08), transparent 40%);
+  }
+  html.dark .spotlight-overlay {
+    background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(16, 185, 129, 0.1), transparent 45%);
+  }
+
+  /* Grid Background */
+  .tech-grid {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-size: 50px 50px;
+    mask-image: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), black 0%, transparent 60%);
+    -webkit-mask-image: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), black 0%, transparent 60%);
+    opacity: 0.2;
+  }
+
+  /* 3D Dashboard Tilt */
+  .dashboard-container { perspective: 2000px; transform-style: preserve-3d; }
+  .dashboard-ui {
+    transform: rotateX(20deg) scale(0.9);
+    box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    backdrop-filter: blur(12px);
+  }
+  html.dark .dashboard-ui {
+    box-shadow: 0 -40px 100px -30px rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  /* Ambient Aurora */
+  .glow-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    animation: blob 20s infinite alternate;
+  }
+
+  /* Input Animations */
+  .input-group:focus-within {
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.5);
+  }
+
+  /* Custom Checkbox Placeholder styling */
+  .custom-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 9999px;
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+  }
+
+  /* Horizontal Ring */
+  .horizon-ring {
+    width: 150vw;
+    height: 150vw;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    bottom: -130vw;
+    transform: translateX(-50%);
+    z-index: 10;
+    pointer-events: none;
+    box-shadow: 0 -40px 100px -20px rgba(16,185,129,0.1), inset 0 20px 100px -20px rgba(16,185,129,0.05);
+  }
+
+  /* Text Highlight */
+  .sell-word {
+    position: relative;
+    display: inline-block;
+    color: #059669;
+  }
+  html.dark .sell-word { color: #34d399; }
+  
+  /* Vertical Lines */
+  .energy-streak {
+    position: absolute;
+    top: -20%;
+    width: 1px;
+    height: 40vh;
+    background: linear-gradient(180deg, transparent, var(--streak-color, #10b981), transparent);
+    animation: rain-drop 8s linear infinite;
+    opacity: 0;
+  }
+  @keyframes rain-drop {
+    0% { transform: translateY(-100vh); opacity: 0; }
+    15% { opacity: 0.3; }
+    85% { opacity: 0.3; }
+    100% { transform: translateY(200vh); opacity: 0; }
+  }
+
+  /* Hide Scrollbar */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+</head>
+
+<body class="antialiased selection:bg-emerald-500/30 font-sans text-slate-600 dark:text-slate-400 bg-white dark:bg-[#020204]">
+
+  <!-- BACKGROUND FX -->
+  <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden dark:bg-[#030610] transition-colors duration-500 bg-neutral-50/60" style="">
+    <div class="ambient-glow">
+      <div class="glow-blob w-[600px] h-[600px] top-[-20%] left-[-10%] animate-blob bg-neutral-600/20" style=""></div>
+      <div class="glow-blob w-[500px] h-[500px] bottom-[-10%] right-[-10%] animate-blob bg-neutral-600/20" style="animation-delay: 4s;"></div>
+    </div>
+    <div class="spotlight-overlay"></div>
+    <div class="tech-grid bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)]"></div>
+    <!-- Vertical Lasers -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden opacity-30">
+        <div class="energy-streak" style="left:20%; animation-duration:7s; --streak-color:#10b981"></div>
+        <div class="energy-streak" style="left:50%; animation-duration:10s; animation-delay:2s; --streak-color:#3b82f6"></div>
+        <div class="energy-streak" style="left:80%; animation-duration:8s; animation-delay:4s; --streak-color:#10b981"></div>
+    </div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 border-b bg-white/70 dark:bg-[#020204]/70 backdrop-blur-xl dark:border-white/5 border-neutral-200" style="">
+    <a href="#" class="flex items-center gap-2 cursor-pointer group" onclick="window.scrollTo(0,0); return false;">
+      <div class="relative flex items-center justify-center w-8 h-8 bg-gradient-to-br rounded-lg border dark:border-white/10 shadow-sm from-neutral-50 dark:from-neutral-500/20 border-neutral-200 to-indigo-50 dark:to-indigo-500/20" style="">
+        <iconify-icon icon="solar:home-smile-linear" class="text-neutral-600 dark:text-neutral-400" width="18" style=""></iconify-icon>
+      </div>
+      <span class="text-sm tracking-tight font-semibold dark:text-white text-neutral-900" style="">LISTO</span>
+    </a>
+
+    <div class="hidden md:flex items-center gap-1 p-1 rounded-full border backdrop-blur-md dark:bg-white/5 dark:border-white/5 bg-neutral-100/50 border-neutral-200" style="">
+      <a href="#commission" class="px-4 py-1.5 text-xs font-medium rounded-full dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5 transition-all text-neutral-500 dark:text-neutral-400 hover:text-neutral-900" style="">Commission</a>
+      <a href="#technology" class="px-4 py-1.5 text-xs font-medium rounded-full dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5 transition-all text-neutral-500 dark:text-neutral-400 hover:text-neutral-900" style="">Technology</a>
+      <a href="#growth" class="px-4 py-1.5 text-xs font-medium rounded-full dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5 transition-all text-neutral-500 dark:text-neutral-400 hover:text-neutral-900" style="">Growth</a>
+      <a href="#compare" class="px-4 py-1.5 text-xs font-medium rounded-full dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5 transition-all text-neutral-500 dark:text-neutral-400 hover:text-neutral-900" style="">Compare</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+       <!-- Theme Toggle -->
+       <button id="theme-toggle" class="w-8 h-8 flex items-center justify-center rounded-md border dark:border-white/10 bg-white dark:bg-[#0a0a0c] transition-all hover:border-neutral-500/50 hover:text-neutral-500 border-neutral-200 text-neutral-600 dark:text-neutral-400" style="">
+          <iconify-icon icon="solar:moon-linear" width="16" class="transition-transform duration-500 dark:-rotate-90 dark:scale-0 dark:opacity-0 absolute rotate-0 scale-100" height="16" id="theme-icon-moon" style="color: rgb(115, 115, 115)"></iconify-icon>
+          <iconify-icon id="theme-icon-sun" icon="solar:sun-2-linear" width="16" class="absolute transition-transform duration-500 rotate-90 scale-0 opacity-0 dark:rotate-0 dark:scale-100 dark:opacity-100"></iconify-icon>
+      </button>
+
+      <button onclick="document.getElementById('join-input').focus()" class="hidden md:block text-xs font-semibold dark:bg-white text-white px-5 py-2 rounded-md hover:opacity-90 transition-opacity bg-neutral-900 dark:text-neutral-900" style="">
+        Join Now
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <main class="min-h-screen flex flex-col pt-32 pb-20 relative items-center justify-center overflow-hidden">
+    <div class="text-center max-w-4xl z-20 mr-auto ml-auto pr-6 pl-6 relative">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[11px] font-medium mb-6 animate-fade-in shadow-[0_0_20px_rgba(16,185,129,0.15)] backdrop-blur-sm border-neutral-500/20 bg-neutral-500/10 text-neutral-700 dark:text-neutral-300" style="">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-neutral-400" style=""></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-neutral-500" style=""></span>
+        </span>
+        <span class="" style="">The Next Gen Brokerage!</span>
+      </div>
+
+      <h1 class="text-5xl md:text-7xl font-semibold tracking-tight dark:text-white leading-[1.1] animate-slide-up mb-6 text-neutral-900" style="">
+        Keep More Commission. <br>
+        <span class="bg-clip-text text-transparent bg-gradient-to-br from-neutral-500 to-[#ff7300]">Work Smarter with AI.</span>
+      </h1>
+
+      <p class="text-lg md:text-xl font-light max-w-2xl mx-auto mb-10 animate-slide-up-delayed opacity-0 text-neutral-600 dark:text-neutral-400" style="animation-delay: 0.2s;">
+        Listo is a next-generation real estate brokerage designed to support modern agents with transparent commissions and built-in technology. <span class="font-medium text-neutral-900 dark:text-neutral-200" style="">No membership fees. No contracts.</span>
+      </p>
+
+      <!-- Mobile Input Form -->
+      <div class="w-full max-w-md mx-auto animate-slide-up-delayed opacity-0" style="animation-delay: 0.3s;">
+        <form class="flex items-center p-1.5 bg-white dark:bg-[#0a0a0c] border dark:border-white/10 rounded-xl shadow-xl input-group transition-all border-neutral-200" style="">
+          <div class="pl-4 text-neutral-400" style="">
+            <iconify-icon icon="solar:phone-calling-linear" width="20"></iconify-icon>
+          </div>
+          <input id="join-input" type="tel" placeholder="Enter your mobile number" class="w-full bg-transparent border-none focus:ring-0 text-sm dark:text-white px-3 py-2 outline-none text-neutral-900 placeholder:text-neutral-500" style="">
+          <button type="button" class="whitespace-nowrap text-white text-xs font-semibold px-5 py-2.5 rounded-lg transition-colors shadow-lg bg-neutral-600 hover:bg-neutral-500 shadow-neutral-500/20" style="">
+            Get Started
+          </button>
+        </form>
+        <div class="flex items-center justify-center gap-4 mt-4 text-[10px] uppercase tracking-widest font-mono text-neutral-500" style="">
+          <span class="flex items-center gap-1"><iconify-icon icon="solar:check-circle-linear" class="text-neutral-500" style=""></iconify-icon> No Credit Check</span>
+          <span class="flex items-center gap-1"><iconify-icon icon="solar:check-circle-linear" class="text-neutral-500" style=""></iconify-icon> Instant Onboarding</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3D Dashboard Visualization -->
+    <div class="dashboard-container z-20 animate-slide-up-delayed opacity-0 w-full max-w-5xl mt-20 mr-auto ml-auto pr-4 pl-4 relative" style="animation-delay: 0.5s">
+      <div class="dashboard-ui relative w-full rounded-xl bg-white dark:bg-[#0a0a0c] overflow-hidden border dark:border-white/5 border-neutral-200">
+        <!-- Header -->
+        <div class="h-9 border-b dark:bg-white/[0.02] dark:border-white/5 flex items-center px-4 justify-between select-none bg-neutral-50 border-neutral-200" style="">
+          <div class="flex gap-1.5 opacity-60">
+            <div class="w-2.5 h-2.5 rounded-full dark:bg-white/20 bg-neutral-300" style=""></div>
+            <div class="w-2.5 h-2.5 rounded-full dark:bg-white/20 bg-neutral-300" style=""></div>
+          </div>
+          <div class="text-[10px] font-mono tracking-widest uppercase flex items-center gap-2 text-neutral-400" style="">
+            <iconify-icon icon="solar:shield-check-linear" width="12"></iconify-icon>
+            Listo_Agent_Portal
+          </div>
+          <div class="w-10"></div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="p-6 md:p-10 dark:bg-[#030304] grid grid-cols-1 md:grid-cols-3 gap-6 bg-neutral-50/50" style="">
+           <!-- Card 1: Commission -->
+           <div class="bg-white dark:bg-[#0e0e10] p-5 rounded-xl border dark:border-white/5 shadow-sm border-neutral-100" style="">
+              <div class="flex justify-between items-start mb-4">
+                 <div class="w-10 h-10 rounded-full flex items-center justify-center bg-neutral-50 dark:bg-neutral-500/10 text-neutral-600 dark:text-neutral-400" style="">
+                    <iconify-icon icon="solar:wallet-money-linear" width="20"></iconify-icon>
+                 </div>
+                 <span class="text-[10px] px-2 py-0.5 rounded-full font-medium bg-neutral-100 dark:bg-neutral-900/30 text-neutral-700 dark:text-neutral-300" style="">YTD</span>
+              </div>
+              <p class="text-xs mb-1 text-neutral-500" style="">Total Commission Kept</p>
+              <h3 class="text-2xl font-semibold dark:text-white text-neutral-900" style="">$142,500</h3>
+              <div class="mt-4 h-1 w-full dark:bg-white/5 rounded-full overflow-hidden bg-neutral-100" style="">
+                 <div class="h-full w-[85%] rounded-full bg-neutral-500" style=""></div>
+              </div>
+           </div>
+
+           <!-- Card 2: Active Listings -->
+           <div class="bg-white dark:bg-[#0e0e10] p-5 rounded-xl border dark:border-white/5 shadow-sm border-neutral-100" style="">
+              <div class="flex justify-between items-start mb-4">
+                 <div class="w-10 h-10 rounded-full flex items-center justify-center bg-neutral-50 dark:bg-neutral-500/10 text-neutral-600 dark:text-neutral-400" style="">
+                    <iconify-icon icon="solar:home-linear" width="20"></iconify-icon>
+                 </div>
+                 <span class="text-[10px] px-2 py-0.5 rounded-full font-medium bg-neutral-100 dark:bg-neutral-900/30 text-neutral-700 dark:text-neutral-300" style="">Active</span>
+              </div>
+              <div class="space-y-3">
+                 <div class="flex items-center gap-3 pb-3 border-b dark:border-white/5 border-neutral-50" style="">
+                    <div class="dark:bg-white/10 bg-amber-400 w-8 h-8 rounded"></div>
+                    <div>
+                       <div class="text-xs font-medium dark:text-white text-neutral-900" style="">128 Maple Drive</div>
+                       <div class="text-[10px] text-neutral-500" style="">Offer Pending</div>
+                    </div>
+                 </div>
+                 <div class="flex items-center gap-3">
+                    <div class="dark:bg-white/10 bg-amber-400 w-8 h-8 rounded"></div>
+                    <div class="">
+                       <div class="text-xs font-medium dark:text-white text-neutral-900" style="">55 Oceanview</div>
+                       <div class="text-[10px] text-neutral-500" style="">Scheduled Viewing</div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+
+           <!-- Card 3: AI Tasks -->
+           <div class="bg-white dark:bg-[#0e0e10] p-5 rounded-xl border dark:border-white/5 shadow-sm border-neutral-100" style="">
+              <div class="flex justify-between items-start mb-4">
+                 <div class="w-10 h-10 rounded-full flex items-center justify-center bg-neutral-50 dark:bg-neutral-500/10 text-neutral-600 dark:text-neutral-400" style="">
+                    <iconify-icon icon="solar:magic-stick-3-linear" width="20"></iconify-icon>
+                 </div>
+                 <span class="text-[10px] font-mono text-neutral-400" style="">AUTO</span>
+              </div>
+              <p class="text-xs mb-3 text-neutral-500" style="">Recent AI Actions</p>
+              <div class="space-y-2">
+                 <div class="text-[10px] flex gap-2 items-center text-neutral-600 dark:text-neutral-400" style="">
+                    <iconify-icon icon="solar:check-circle-linear" class="text-neutral-500" style=""></iconify-icon>
+                    Sent open house follow-up
+                 </div>
+                 <div class="text-[10px] flex gap-2 items-center text-neutral-600 dark:text-neutral-400" style="">
+                    <iconify-icon icon="solar:check-circle-linear" class="text-neutral-500" style=""></iconify-icon>
+                    Scheduled showing (Lead #402)
+                 </div>
+                 <div class="text-[10px] flex gap-2 items-center text-neutral-600 dark:text-neutral-400" style="">
+                    <iconify-icon icon="solar:check-circle-linear" class="text-neutral-500" style=""></iconify-icon>
+                    Generated listing flyer
+                 </div>
+              </div>
+           </div>
+        </div>
+      </div>
+    </div>
+    <div class="horizon-ring"></div>
+  </main>
+
+  <!-- COMMISSION SECTION -->
+  <section id="commission" class="py-24 relative border-t dark:border-white/5 border-neutral-200" style="">
+    <div class="absolute inset-0 dark:bg-[#020204]/70 -z-10 bg-neutral-50/20" style=""></div>
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 max-w-3xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-semibold dark:text-white mb-6 text-neutral-900" style="">Commission Structure</h2>
+        <p class="text-lg font-light text-neutral-600 dark:text-neutral-400" style="">Simple. Transparent. Agent-First. Keep more of what you earn.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+         <!-- Flat Fee -->
+         <div class="col-span-1 overflow-hidden group md:col-span-2 text-white bg-gradient-to-br from-[#ff8800] to-[#000000] rounded-2xl px-8 py-8 relative shadow-xl">
+            <div class="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all"></div>
+            <div class="relative z-10">
+               <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-6">
+                  <iconify-icon icon="solar:pie-chart-2-linear" width="24" class="text-white"></iconify-icon>
+               </div>
+               <h3 class="text-3xl font-bold mb-2">10% Broker Fee</h3>
+               <p class="font-light mb-6 text-neutral-100" style="">Simple flat commission split. No hidden tiers or caps to worry about.</p>
+               <ul class="space-y-2 text-sm font-medium">
+                  <li class="flex items-center gap-2"><iconify-icon icon="solar:check-circle-bold" width="16"></iconify-icon> Transparent reporting</li>
+                  <li class="flex items-center gap-2"><iconify-icon icon="solar:check-circle-bold" width="16"></iconify-icon> Paid immediately on closing</li>
+               </ul>
+            </div>
+         </div>
+
+         <!-- Zero Fees -->
+         <div class="col-span-1 md:col-span-2 p-8 rounded-2xl bg-white dark:bg-[#0a0a0c] border dark:border-white/10 shadow-lg relative group transition-colors hover:border-neutral-500/30 border-neutral-200" style="">
+            <div class="relative z-10">
+               <div class="w-12 h-12 rounded-xl dark:bg-white/5 flex items-center justify-center mb-6 dark:text-white bg-neutral-100 text-neutral-900" style="">
+                  <iconify-icon icon="solar:forbidden-circle-linear" width="24"></iconify-icon>
+               </div>
+               <h3 class="text-2xl font-semibold dark:text-white mb-2 text-neutral-900" style="">Zero Monthly Costs</h3>
+               <p class="font-light mb-6 text-neutral-500 dark:text-neutral-400" style="">We don't believe in charging you to work here.</p>
+               <div class="grid grid-cols-2 gap-4">
+                  <div class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300" style="">
+                     <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] bg-neutral-100 dark:bg-neutral-900/30 text-neutral-600 dark:text-neutral-400" style=""><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>
+                     No Membership Fees
+                  </div>
+                  <div class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300" style="">
+                     <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] bg-neutral-100 dark:bg-neutral-900/30 text-neutral-600 dark:text-neutral-400" style=""><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>
+                     No Desk Fees
+                  </div>
+                  <div class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300" style="">
+                     <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] bg-neutral-100 dark:bg-neutral-900/30 text-neutral-600 dark:text-neutral-400" style=""><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>
+                     No CRM Charges
+                  </div>
+                  <div class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300" style="">
+                     <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] bg-neutral-100 dark:bg-neutral-900/30 text-neutral-600 dark:text-neutral-400" style=""><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>
+                     No Credit Check
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      
+      <!-- Referral Banner -->
+      <div class="mt-8 p-8 rounded-2xl bg-gradient-to-r border flex flex-col md:flex-row items-center justify-between gap-6 to-neutral-50 dark:to-neutral-900/10 from-neutral-50 dark:from-neutral-900/10 border-neutral-100 dark:border-neutral-500/10" style="">
+         <div class="">
+            <div class="flex items-center gap-2 mb-2 text-neutral-600 dark:text-neutral-400" style="">
+               <iconify-icon icon="solar:users-group-rounded-linear" width="20"></iconify-icon>
+               <span class="text-xs font-bold uppercase tracking-wider">Referral Program</span>
+            </div>
+            <h3 class="text-xl font-semibold dark:text-white mb-2 text-neutral-900" style="">Refer Agents, Earn Forever</h3>
+            <p class="text-sm max-w-xl text-neutral-600 dark:text-neutral-400" style="">
+               Refer another realtor to Listo and receive <span class="font-semibold text-neutral-600 dark:text-neutral-400" style="">10% of their broker fee</span> when they complete a transaction. Fully tracked, transparent reporting, ongoing income.
+            </p>
+         </div>
+         <div class="shrink-0">
+            <span class="text-3xl font-bold text-neutral-600 dark:text-neutral-400" style="">10%</span>
+            <span class="block text-xs text-center text-neutral-500" style="">of broker fee</span>
+         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH & GROWTH SECTION -->
+  <section id="technology" class="py-24 relative border-t dark:border-white/5 bg-white dark:bg-[#020204] border-neutral-200" style="">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+         <div class="max-w-2xl">
+            <h2 class="text-3xl md:text-4xl font-semibold dark:text-white mb-4 text-neutral-900" style="">Technology that handles the rest.</h2>
+            <p class="text-lg font-light text-neutral-600 dark:text-neutral-400" style="">
+               Focus on client relationships. Our platform combines fair compensation with advanced automation.
+            </p>
+         </div>
+         <div class="px-4 py-2 rounded-lg text-sm font-medium border bg-neutral-100 dark:bg-neutral-900/20 text-neutral-800 dark:text-neutral-300 border-neutral-200 dark:border-neutral-500/20" style="">
+            Includes $1,000 Marketing Credit
+         </div>
+      </div>
+
+      <!-- BENTO GRID -->
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[250px]">
+         
+         <!-- Tile 1: AI Calling (Large) -->
+         <div class="col-span-1 md:col-span-2 row-span-2 rounded-2xl dark:bg-[#0a0a0c] border dark:border-white/10 p-8 flex flex-col justify-between relative overflow-hidden group transition-all hover:border-neutral-500/20 bg-neutral-50 border-neutral-200" style="">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.05),transparent_40%)]"></div>
+            <div>
+               <div class="w-10 h-10 rounded-lg bg-white dark:bg-white/10 border dark:border-white/10 flex items-center justify-center dark:text-white mb-6 shadow-sm border-neutral-200 text-neutral-900" style="">
+                  <iconify-icon icon="solar:phone-calling-rounded-linear" width="20"></iconify-icon>
+               </div>
+               <h3 class="text-xl font-semibold dark:text-white mb-2 text-neutral-900" style="">Automated Calling &amp; Smart Scripts</h3>
+               <p class="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400" style="">
+                  AI-assisted outbound and follow-up calls with context-aware scripting. Calls are automatically logged and tracked in your CRM.
+               </p>
+            </div>
+            <div class="mt-6 flex flex-col gap-2">
+               <div class="flex items-center gap-3 p-3 bg-white dark:bg-white/5 rounded-lg border dark:border-white/5 border-neutral-100" style="">
+                  <div class="w-2 h-2 rounded-full animate-pulse bg-neutral-500" style=""></div>
+                  <span class="text-xs font-mono text-neutral-500" style="">AI calling Lead #992...</span>
+               </div>
+               <div class="flex items-center gap-3 p-3 bg-white dark:bg-white/5 rounded-lg border dark:border-white/5 opacity-60 border-neutral-100" style="">
+                  <div class="w-2 h-2 rounded-full bg-neutral-300 dark:bg-neutral-600" style=""></div>
+                  <span class="text-xs font-mono text-neutral-500" style="">Log: "Interested in viewing..."</span>
+               </div>
+            </div>
+         </div>
+
+         <!-- Tile 2: CRM (Tall) -->
+         <div class="col-span-1 row-span-2 rounded-2xl dark:bg-[#0a0a0c] border dark:border-white/10 p-8 flex flex-col relative overflow-hidden group transition-all hover:border-neutral-500/20 bg-neutral-50 border-neutral-200" style="">
+            <div class="w-10 h-10 rounded-lg bg-white dark:bg-white/10 border dark:border-white/10 flex items-center justify-center dark:text-white mb-6 shadow-sm border-neutral-200 text-neutral-900" style="">
+               <iconify-icon icon="solar:chart-2-linear" width="20"></iconify-icon>
+            </div>
+            <h3 class="text-xl font-semibold dark:text-white mb-2 text-neutral-900" style="">Built-In CRM</h3>
+            <p class="text-sm mb-8 text-neutral-600 dark:text-neutral-400" style="">
+               Fully integrated. No third-party subscriptions required. Manage contacts, pipelines, and tasks.
+            </p>
+            <div class="flex-1 bg-white dark:bg-[#0e0e10] rounded-t-xl border-t border-x dark:border-white/10 p-4 shadow-sm relative top-2 border-neutral-200" style="">
+               <div class="flex gap-2 mb-3">
+                  <div class="h-1.5 w-full rounded-full bg-neutral-500" style=""></div>
+                  <div class="h-1.5 w-1/3 dark:bg-white/10 rounded-full bg-neutral-200" style=""></div>
+               </div>
+               <div class="space-y-2">
+                  <div class="h-8 w-full dark:bg-white/5 rounded border dark:border-white/5 bg-neutral-50 border-neutral-100" style=""></div>
+                  <div class="h-8 w-full dark:bg-white/5 rounded border dark:border-white/5 bg-neutral-50 border-neutral-100" style=""></div>
+               </div>
+            </div>
+         </div>
+
+         <!-- Tile 3: Marketing Credit -->
+         <div class="col-span-1 md:col-span-1 rounded-2xl bg-gradient-to-br p-8 text-white flex flex-col justify-center relative overflow-hidden from-neutral-900 to-neutral-800 dark:from-neutral-800 dark:to-neutral-900" style="">
+            <div class="absolute top-0 right-0 w-24 h-24 blur-3xl rounded-full bg-neutral-500/20" style=""></div>
+            <h3 class="text-3xl font-bold mb-1">$1,000</h3>
+            <p class="text-sm font-medium mb-4 text-neutral-300" style="">Platform Credit</p>
+            <p class="text-xs leading-relaxed text-neutral-400" style="">
+               For every newly onboarded agent. Use for AI automations, Meta ads, or campaigns.
+            </p>
+         </div>
+
+         <!-- Tile 4: Social Media -->
+         <div class="col-span-1 md:col-span-1 rounded-2xl dark:bg-[#0a0a0c] border dark:border-white/10 p-8 flex flex-col justify-between transition-all hover:border-neutral-500/20 bg-neutral-50 border-neutral-200" style="">
+            <div class="">
+               <iconify-icon icon="solar:smartphone-linear" width="24" class="dark:text-white mb-4 text-neutral-900" style=""></iconify-icon>
+               <h3 class="text-lg font-semibold dark:text-white text-neutral-900" style="">Social Media</h3>
+               <p class="text-xs mt-2 text-neutral-600 dark:text-neutral-400" style="">Post scheduling &amp; engagement tracking included.</p>
+            </div>
+         </div>
+
+         <!-- Tile 5: Listing Marketing (Wide) -->
+         <div class="col-span-1 md:col-span-2 rounded-2xl dark:bg-[#0a0a0c] border dark:border-white/10 p-8 flex flex-col md:flex-row gap-8 items-center transition-all bg-neutral-50 border-neutral-200 hover:border-neutral-500/20" style="">
+            <div class="flex-1">
+               <h3 class="text-xl font-semibold dark:text-white mb-2 text-neutral-900" style="">Listing Marketing &amp; Digital Assets</h3>
+               <p class="text-sm leading-relaxed mb-4 text-neutral-600 dark:text-neutral-400" style="">
+                  Every listing gets a dedicated landing page, hosted property page, and professional flyers. All infrastructure included.
+               </p>
+               <div class="flex gap-2">
+                  <span class="px-2 py-1 bg-white dark:bg-white/10 border dark:border-white/10 rounded text-[10px] border-neutral-200 text-neutral-600 dark:text-neutral-300" style="">Dedicated Pages</span>
+                  <span class="px-2 py-1 bg-white dark:bg-white/10 border dark:border-white/10 rounded text-[10px] border-neutral-200 text-neutral-600 dark:text-neutral-300" style="">Flyers</span>
+               </div>
+            </div>
+            <div class="w-full md:w-1/3 aspect-video bg-white dark:bg-[#0e0e10] rounded-lg shadow-sm border dark:border-white/5 flex items-center justify-center relative overflow-hidden border-neutral-200" style="">
+                <!-- Mini mock landing page -->
+                <div class="absolute inset-0 dark:bg-white/5 m-2 rounded bg-neutral-100" style=""></div>
+                <div class="absolute bottom-4 left-4 right-4 h-2 dark:bg-white/10 rounded-full w-1/2 bg-neutral-200" style=""></div>
+            </div>
+         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON SECTION -->
+  <section id="compare" class="py-24 border-t dark:border-white/5 dark:bg-white/[0.02] relative overflow-hidden border-neutral-200 bg-neutral-50/50" style="">
+    <div class="max-w-5xl mx-auto px-6 relative z-10">
+       <div class="text-center mb-16">
+          <h2 class="text-3xl font-semibold dark:text-white mb-4 text-neutral-900" style="">A Brokerage Built for Profit</h2>
+          <p class="text-neutral-600 dark:text-neutral-400" style="">Stop paying for the privilege of working. Start keeping your commission.</p>
+       </div>
+
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+          
+          <!-- Traditional Side -->
+          <div class="rounded-3xl p-8 bg-white/80 dark:bg-[#0a0a0c]/80 border dark:border-white/10 backdrop-blur-sm grayscale-[30%] opacity-90 hover:opacity-100 transition-opacity border-neutral-200" style="">
+             <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-full dark:bg-white/5 flex items-center justify-center bg-neutral-100 text-neutral-500" style="">
+                   <iconify-icon icon="solar:building-3-linear" width="20"></iconify-icon>
+                </div>
+                <div>
+                   <h3 class="text-lg font-semibold dark:text-white text-neutral-900" style="">Traditional Broker</h3>
+                   <p class="text-xs text-neutral-500" style="">The "Standard" Model</p>
+                </div>
+             </div>
+
+             <ul class="space-y-6">
+                <li class="flex items-start gap-4">
+                   <iconify-icon icon="solar:close-circle-linear" class="mt-1 shrink-0 text-neutral-400" width="20" style=""></iconify-icon>
+                   <div class="">
+                      <p class="font-medium dark:text-white text-neutral-900" style="">Complex Splits (60-80%)</p>
+                      <p class="text-xs mt-1 text-neutral-500" style="">You surrender a massive chunk of every deal to the house.</p>
+                   </div>
+                </li>
+                <li class="flex items-start gap-4">
+                   <iconify-icon icon="solar:close-circle-linear" class="mt-1 shrink-0 text-neutral-400" width="20" style=""></iconify-icon>
+                   <div class="">
+                      <p class="font-medium dark:text-white text-neutral-900" style="">High Monthly Fees</p>
+                      <p class="text-xs mt-1 text-neutral-500" style="">Desk fees, franchise fees, and tech fees eat your income monthly.</p>
+                   </div>
+                </li>
+                
+                
+             </ul>
+          </div>
+
+          <!-- Listo Side -->
+          <div class="rounded-3xl p-8 dark:bg-[#0a0a0c] border relative overflow-hidden shadow-2xl bg-neutral-50/10 border-neutral-500/20 dark:border-neutral-500/20 shadow-neutral-900/10" style="">
+             <div class="absolute inset-0 pointer-events-none bg-neutral-500/5" style=""></div>
+             <div class="absolute -top-24 -right-24 w-48 h-48 blur-3xl rounded-full bg-neutral-500/20" style=""></div>
+             
+             <div class="relative z-10">
+               <div class="flex items-center justify-between mb-8">
+                  <div class="flex items-center gap-3">
+                     <div class="w-10 h-10 rounded-full flex items-center justify-center bg-neutral-100 dark:bg-neutral-500/20 text-neutral-600 dark:text-neutral-400" style="">
+                        <iconify-icon icon="solar:stars-minimalistic-linear" width="20"></iconify-icon>
+                     </div>
+                     <div>
+                        <h3 class="text-lg font-semibold dark:text-white text-neutral-900" style="">Listo Model</h3>
+                        <p class="text-xs font-medium text-neutral-600 dark:text-neutral-400" style="">Modern &amp; Fair</p>
+                     </div>
+                  </div>
+                  <div class="px-3 py-1 rounded-full text-white text-[10px] font-bold tracking-wide uppercase bg-neutral-500" style="">
+                     Recommended
+                  </div>
+               </div>
+
+               <ul class="space-y-6">
+                  <li class="flex items-start gap-4">
+                     <iconify-icon icon="solar:check-circle-bold" class="mt-1 shrink-0 text-neutral-500" width="20" style=""></iconify-icon>
+                     <div>
+                        <p class="font-semibold dark:text-white text-lg text-neutral-900" style="">90% Commission Kept</p>
+                        <p class="text-xs mt-1 text-neutral-500 dark:text-neutral-400" style="">A simple, flat 10% broker fee. You keep the lion's share.</p>
+                     </div>
+                  </li>
+                  <li class="flex items-start gap-4">
+                     <iconify-icon icon="solar:check-circle-bold" class="mt-1 shrink-0 text-neutral-500" width="20" style=""></iconify-icon>
+                     <div>
+                        <p class="font-semibold dark:text-white text-lg text-neutral-900" style="">$0 Monthly Cost</p>
+                        <p class="text-xs mt-1 text-neutral-500 dark:text-neutral-400" style="">No desk fees. No hidden costs. Pay only when you close.</p>
+                     </div>
+                  </li>
+                  
+                  
+               </ul>
+
+               <div class="mt-8 pt-6 border-t border-neutral-500/20" style="">
+                  <div class="flex items-center justify-between">
+                     <span class="text-sm text-neutral-500 dark:text-neutral-400" style="">Avg. Agent Savings</span>
+                     <span class="text-2xl font-bold text-neutral-600 dark:text-neutral-400" style="">+$24k<span class="text-sm font-normal text-neutral-400" style="">/yr</span></span>
+                  </div>
+               </div>
+             </div>
+          </div>
+       </div>
+    </div>
+  </section>
+
+  <!-- CTA / FOOTER -->
+  <footer class="py-24 border-t dark:border-white/5 relative overflow-hidden border-neutral-200" style="">
+    <div class="absolute inset-0 dark:bg-[#030610] -z-10 bg-neutral-50/50" style=""></div>
+    <div class="max-w-2xl mx-auto px-6 text-center">
+       <h2 class="text-4xl md:text-5xl font-semibold tracking-tight dark:text-white mb-6 text-neutral-900" style="">Instantly Join Listo</h2>
+       <p class="text-lg font-light mb-10 text-neutral-600 dark:text-neutral-400" style="">
+          Provide your mobile number to begin onboarding. <br>
+          <span class="text-sm opacity-70">No credit check. No membership fees. No contracts.</span>
+       </p>
+
+       <form class="flex items-center p-1.5 bg-white dark:bg-[#0a0a0c] border dark:border-white/10 rounded-xl shadow-2xl input-group max-w-sm mx-auto mb-12 border-neutral-200" style="">
+          <div class="pl-4 text-neutral-400" style="">
+             <iconify-icon icon="solar:phone-calling-linear" width="20"></iconify-icon>
+          </div>
+          <input type="tel" placeholder="Mobile Number" class="w-full bg-transparent border-none focus:ring-0 text-sm dark:text-white px-3 py-3 outline-none text-neutral-900 placeholder:text-neutral-500" style="">
+          <button type="button" class="whitespace-nowrap text-white text-xs font-semibold px-6 py-3 rounded-lg transition-colors shadow-lg bg-neutral-600 hover:bg-neutral-500 shadow-neutral-500/20" style="">
+             Get Started
+          </button>
+       </form>
+
+       <div class="pt-10 border-t dark:border-white/5 flex flex-col md:flex-row justify-between items-center text-xs border-neutral-200 text-neutral-500 dark:text-neutral-400" style="">
+          <div class="flex items-center gap-2 mb-4 md:mb-0">
+             <span class="font-semibold dark:text-white text-neutral-900" style="">LISTO</span>
+             <span>© 2024</span>
+          </div>
+          <div class="flex gap-6">
+             <a href="#" class="dark:hover:text-white transition-colors hover:text-neutral-900" style="">Privacy</a>
+             <a href="#" class="dark:hover:text-white transition-colors hover:text-neutral-900" style="">Terms</a>
+             <span class="opacity-50">We respect your privacy and do not send spam.</span>
+          </div>
+       </div>
+    </div>
+  </footer>
+
+  <script>
+    // Theme Logic
+    const themeBtn = document.getElementById('theme-toggle');
+    const html = document.getElementById('html-root');
+    
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+
+    themeBtn.addEventListener('click', () => {
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        localStorage.theme = 'light';
+      } else {
+        html.classList.add('dark');
+        localStorage.theme = 'dark';
+      }
+    });
+
+    // Mouse Tracking for Spotlight
+    document.addEventListener('mousemove', (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+      document.body.style.setProperty('--mouse-x', `${x}px`);
+      document.body.style.setProperty('--mouse-y', `${y}px`);
+    });
+
+    // 3D Tilt Logic
+    document.addEventListener('DOMContentLoaded', () => {
+      const dashboard = document.querySelector('.dashboard-ui');
+      if (!dashboard) return;
+      
+      let currentScale = 0.92;
+      let currentRot = 20;
+      let targetScale = 0.92;
+      let targetRot = 20;
+      let isHovered = false;
+
+      dashboard.addEventListener('mouseenter', () => isHovered = true);
+      dashboard.addEventListener('mouseleave', () => isHovered = false);
+
+      const loop = () => {
+        // Simple easing loop
+        const maxScale = 1.0;
+        const baseScale = 0.92;
+        const baseRot = 20;
+        const activeRot = 5;
+
+        targetScale = isHovered ? maxScale : baseScale;
+        targetRot = isHovered ? activeRot : baseRot;
+
+        currentScale += (targetScale - currentScale) * 0.05;
+        currentRot += (targetRot - currentRot) * 0.05;
+
+        dashboard.style.transform = `rotateX(${currentRot.toFixed(2)}deg) scale(${currentScale.toFixed(3)})`;
+        requestAnimationFrame(loop);
+      };
+      loop();
+    });
+  </script>
+
+</body></html>
