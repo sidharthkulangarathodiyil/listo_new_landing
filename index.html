@@ -1,717 +1,934 @@
-<html lang="en" class="dark scroll-smooth" id="html-root"><head>
-<meta charset="UTF-8">
+<html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Listo - A Smarter Brokerage Model for Today’s Real Estate Professionals.">
-<title>Listo | The Next-Gen Real Estate Brokerage</title>
+<title>Listo OS - AI-Powered Brokerage</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config = {
-  darkMode: 'class',
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
-        serif: ['Newsreader', 'serif'],
-      },
-      animation: {
-        'fade-in': 'fadeIn 0.5s ease-out forwards',
-        'blob': 'blob 10s infinite',
-        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-        'slide-up-delayed': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards',
-      },
-      keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0', transform: 'translateY(10px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(30px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        blob: {
-          '0%': { transform: 'translate(0px, 0px) scale(1)' },
-          '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-          '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-          '100%': { transform: 'translate(0px, 0px) scale(1)' },
-        },
-      },
-    },
-  },
-};
-</script>
 <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Newsreader:ital,opsz,wght@0,6..72,200..600;1,6..72,200..600&amp;display=swap" rel="stylesheet">
-
 <style>
-  /* Base Styles & Transitions */
-  body, .bg-transition, div, nav, button, section, span, p, h1, h2, h3, input, textarea, label {
-    transition-property: background-color, border-color, color, fill, stroke;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 300ms;
-  }
-  body {
-    font-family: 'Inter', sans-serif;
-    overflow-x: hidden;
-    cursor: default;
-    --mouse-x: 50vw;
-    --mouse-y: 50vh;
-  }
-  
-  /* Spotlight Effect */
-  .spotlight-overlay {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 2;
-    background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(16, 185, 129, 0.08), transparent 40%);
-  }
-  html.dark .spotlight-overlay {
-    background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(16, 185, 129, 0.1), transparent 45%);
-  }
-
-  /* Grid Background */
-  .tech-grid {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background-size: 50px 50px;
-    mask-image: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), black 0%, transparent 60%);
-    -webkit-mask-image: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), black 0%, transparent 60%);
-    opacity: 0.2;
-  }
-
-  /* 3D Dashboard Tilt */
-  .dashboard-container { perspective: 2000px; transform-style: preserve-3d; }
-  .dashboard-ui {
-    transform: rotateX(20deg) scale(0.9);
-    box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-    backdrop-filter: blur(12px);
-  }
-  html.dark .dashboard-ui {
-    box-shadow: 0 -40px 100px -30px rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(255,255,255,0.05);
-  }
-  
-  /* Ambient Aurora */
-  .glow-blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.4;
-    animation: blob 20s infinite alternate;
-  }
-
-  /* Input Animations */
-  .input-group:focus-within {
-    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-    border-color: rgba(16, 185, 129, 0.5);
-  }
-
-  /* Custom Checkbox Placeholder styling */
-  .custom-check {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.25rem;
-    height: 1.25rem;
-    border-radius: 9999px;
-    background-color: rgba(16, 185, 129, 0.1);
-    color: #10b981;
-  }
-
-  /* Horizontal Ring */
-  .horizon-ring {
-    width: 150vw;
-    height: 150vw;
-    border-radius: 50%;
-    position: absolute;
-    left: 50%;
-    bottom: -130vw;
-    transform: translateX(-50%);
-    z-index: 10;
-    pointer-events: none;
-    box-shadow: 0 -40px 100px -20px rgba(16,185,129,0.1), inset 0 20px 100px -20px rgba(16,185,129,0.05);
-  }
-
-  /* Text Highlight */
-  .sell-word {
+body { font-family: 'Manrope', sans-serif; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
+/* Modal Transition Styles */
+.modal-enter { opacity: 0; transform: translate(-50%, -50%) scale(0.95); pointer-events: none; visibility: hidden; }
+.modal-active { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; visibility: visible; }
+.overlay-enter { opacity: 0; pointer-events: none; visibility: hidden; }
+.overlay-active { opacity: 1; pointer-events: auto; visibility: visible; }
+/* Accordion Styles */
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details[open] summary ~ * { animation: sweep .3s ease-in-out; }
+@keyframes sweep { 0% {opacity: 0; transform: translateY(-10px)} 100% {opacity: 1; transform: translateY(0)} }
+/* How Listo AI Works – scroll-triggered step reveal */
+.listo-step { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
+.listo-step.step-visible { opacity: 1; transform: translateY(0); }
+.listo-step-header { opacity: 0; transform: translateY(16px); transition: opacity 0.4s ease-out, transform 0.4s ease-out; }
+.listo-step-header.step-visible { opacity: 1; transform: translateY(0); }
+/* Active step while scrolling – orange highlight with transition */
+.listo-step .step-num { transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease, box-shadow 0.35s ease; }
+.listo-step.step-active .step-num { background-color: #ea580c; border-color: #ea580c; color: #fff; box-shadow: 0 10px 15px -3px rgba(234, 88, 12, 0.2); }
+.listo-step .step-icon { transition: background-color 0.35s ease, border-color 0.35s ease; }
+.listo-step.step-active .step-icon { background-color: #fff7ed; border-color: #ffedd5; }
+.listo-step .step-icon iconify-icon { transition: color 0.35s ease; }
+.listo-step.step-active .step-icon iconify-icon { color: #ea580c; }
+.listo-step h3 { transition: color 0.35s ease; }
+.listo-step.step-active h3 { color: #ea580c; }
+/* Mobile floating bar: respect safe area above home indicator */
+.safe-area-pb { padding-bottom: max(1rem, env(safe-area-inset-bottom, 1rem)); }
+/* Light sweep on Mona card */
+@keyframes light-sweep {
+    0% { transform: translateX(-100%) skewX(-12deg); }
+    100% { transform: translateX(200%) skewX(-12deg); }
+}
+.mona-card-sweep {
     position: relative;
-    display: inline-block;
-    color: #059669;
-  }
-  html.dark .sell-word { color: #34d399; }
-  
-  /* Vertical Lines */
-  .energy-streak {
+    overflow: hidden;
+}
+.mona-card-sweep::after {
+    content: '';
     position: absolute;
-    top: -20%;
-    width: 1px;
-    height: 40vh;
-    background: linear-gradient(180deg, transparent, var(--streak-color, #10b981), transparent);
-    animation: rain-drop 8s linear infinite;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.4) 45%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.4) 55%, transparent 100%);
+    animation: light-sweep 4s ease-in-out infinite;
+    pointer-events: none;
+}
+/* Shining bonus text */
+@keyframes text-shine {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
+}
+.bonus-text-shine {
+    background: linear-gradient(90deg, #ea580c 0%, #f97316 25%, #fff7ed 50%, #f97316 75%, #ea580c 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: text-shine 2.5s linear infinite;
+}
+/* Hero: rotating word – fade + blur transition */
+.hero-rotating-wrap {
+    display: inline-block;
+    position: relative;
+    min-width: 12em;
+    vertical-align: top;
+}
+.hero-rotating-word {
+    display: inline-block;
+    transition: opacity 0.5s ease, filter 0.5s ease;
+    color: #ea580c;
+    -webkit-text-fill-color: #ea580c;
+    filter: blur(0);
+}
+.hero-rotating-word.hero-rotating-hidden {
+    position: absolute;
+    left: 0;
+    top: 0;
     opacity: 0;
-  }
-  @keyframes rain-drop {
-    0% { transform: translateY(-100vh); opacity: 0; }
-    15% { opacity: 0.3; }
-    85% { opacity: 0.3; }
-    100% { transform: translateY(200vh); opacity: 0; }
-  }
-
-  /* Hide Scrollbar */
-  .no-scrollbar::-webkit-scrollbar { display: none; }
-  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    filter: blur(8px);
+    pointer-events: none;
+}
+/* Typography scale & rhythm */
+body { font-feature-settings: "kern" 1, "liga" 1; line-height: 1.6; }
+.text-balance { text-wrap: balance; }
+/* Section titles */
+.section-title { font-size: clamp(1.75rem, 4vw, 3rem); font-weight: 600; letter-spacing: -0.025em; line-height: 1.15; color: #111; }
+.section-lead { font-size: 1.0625rem; line-height: 1.65; color: #6b7280; }
+/* Card titles */
+.card-title { font-size: 1.375rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.3; color: #111; }
+.card-desc { font-size: 0.9375rem; line-height: 1.55; color: #6b7280; }
+/* Hero */
+.hero-title { font-size: clamp(2.5rem, 6vw, 4.25rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.08; color: #111; }
+.hero-subtitle { font-size: 1.125rem; line-height: 1.65; letter-spacing: -0.01em; color: #6b7280; }
+/* Small / overline */
+.overline { font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #ea580c; }
+/* Buttons & UI */
+.btn-text { font-size: 0.9375rem; font-weight: 500; letter-spacing: -0.01em; }
 </style>
-</head>
+<link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-manrope">.font-manrope { font-family: 'Manrope', sans-serif !important; }</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-quicksand">.font-quicksand { font-family: 'Quicksand', sans-serif !important; }</style></head>
+<body class="antialiased min-h-screen flex flex-col items-center selection:bg-orange-100 selection:text-orange-900 text-[#111] bg-[#F9FAFB]">
 
-<body class="antialiased selection:bg-emerald-500/30 font-sans text-slate-600 dark:text-slate-400 bg-white dark:bg-[#020204]">
+<!-- Background (component) -->
+<div class="aura-background-component fixed top-0 w-full h-screen opacity-40 -z-10 mix-blend-normal pointer-events-none" style="mask-image: linear-gradient(to bottom, transparent, black 0%, black 50%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 50%, transparent)">
+    <div class="absolute w-full h-full left-0 top-0 bg-gradient-to-tr from-white via-orange-50/50 to-white"></div>
+    <div class="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-orange-200/30 blur-[120px] rounded-full"></div>
+    <div class="absolute bottom-[10%] left-[-10%] w-[40%] h-[40%] bg-orange-100/40 blur-[120px] rounded-full"></div>
+</div>
 
-  <!-- BACKGROUND FX -->
-  <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden dark:bg-[#030610] transition-colors duration-500 bg-neutral-50/60" style="">
-    <div class="ambient-glow">
-      <div class="glow-blob w-[600px] h-[600px] top-[-20%] left-[-10%] animate-blob bg-neutral-600/20" style=""></div>
-      <div class="glow-blob w-[500px] h-[500px] bottom-[-10%] right-[-10%] animate-blob bg-neutral-600/20" style="animation-delay: 4s;"></div>
-    </div>
-    <div class="spotlight-overlay"></div>
-    <div class="tech-grid bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)]"></div>
-    <!-- Vertical Lasers -->
-    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden opacity-30">
-        <div class="energy-streak" style="left:20%; animation-duration:7s; --streak-color:#10b981"></div>
-        <div class="energy-streak" style="left:50%; animation-duration:10s; animation-delay:2s; --streak-color:#3b82f6"></div>
-        <div class="energy-streak" style="left:80%; animation-duration:8s; animation-delay:4s; --streak-color:#10b981"></div>
-    </div>
-  </div>
-
-  <!-- NAVIGATION -->
-  <nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 border-b bg-white/70 dark:bg-[#020204]/70 backdrop-blur-xl dark:border-white/5 border-neutral-200" style="">
-    <a href="#" class="flex items-center gap-2 cursor-pointer group" onclick="window.scrollTo(0,0); return false;">
-      <div class="relative flex items-center justify-center w-8 h-8 bg-gradient-to-br rounded-lg border dark:border-white/10 shadow-sm from-neutral-50 dark:from-neutral-500/20 border-neutral-200 to-indigo-50 dark:to-indigo-500/20" style="">
-        <iconify-icon icon="solar:home-smile-linear" class="text-neutral-600 dark:text-neutral-400" width="18" style=""></iconify-icon>
-      </div>
-      <span class="text-sm tracking-tight font-semibold dark:text-white text-neutral-900" style="">LISTO</span>
-    </a>
-
-    <div class="hidden md:flex items-center gap-1 p-1 rounded-full border backdrop-blur-md dark:bg-white/5 dark:border-white/5 bg-neutral-100/50 border-neutral-200" style="">
-      <a href="#commission" class="px-4 py-1.5 text-xs font-medium rounded-full dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5 transition-all text-neutral-500 dark:text-neutral-400 hover:text-neutral-900" style="">Commission</a>
-      <a href="#technology" class="px-4 py-1.5 text-xs font-medium rounded-full dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5 transition-all text-neutral-500 dark:text-neutral-400 hover:text-neutral-900" style="">Technology</a>
-      <a href="#growth" class="px-4 py-1.5 text-xs font-medium rounded-full dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5 transition-all text-neutral-500 dark:text-neutral-400 hover:text-neutral-900" style="">Growth</a>
-      <a href="#compare" class="px-4 py-1.5 text-xs font-medium rounded-full dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5 transition-all text-neutral-500 dark:text-neutral-400 hover:text-neutral-900" style="">Compare</a>
-    </div>
-
-    <div class="flex items-center gap-3">
-       <!-- Theme Toggle -->
-       <button id="theme-toggle" class="w-8 h-8 flex items-center justify-center rounded-md border dark:border-white/10 bg-white dark:bg-[#0a0a0c] transition-all hover:border-neutral-500/50 hover:text-neutral-500 border-neutral-200 text-neutral-600 dark:text-neutral-400" style="">
-          <iconify-icon icon="solar:moon-linear" width="16" class="transition-transform duration-500 dark:-rotate-90 dark:scale-0 dark:opacity-0 absolute rotate-0 scale-100" height="16" id="theme-icon-moon" style="color: rgb(115, 115, 115)"></iconify-icon>
-          <iconify-icon id="theme-icon-sun" icon="solar:sun-2-linear" width="16" class="absolute transition-transform duration-500 rotate-90 scale-0 opacity-0 dark:rotate-0 dark:scale-100 dark:opacity-100"></iconify-icon>
-      </button>
-
-      <button onclick="document.getElementById('join-input').focus()" class="hidden md:block text-xs font-semibold dark:bg-white text-white px-5 py-2 rounded-md hover:opacity-90 transition-opacity bg-neutral-900 dark:text-neutral-900" style="">
-        Join Now
-      </button>
-    </div>
-  </nav>
-
-  <!-- HERO SECTION -->
-  <main class="min-h-screen flex flex-col pt-32 pb-20 relative items-center justify-center overflow-hidden">
-    <div class="text-center max-w-4xl z-20 mr-auto ml-auto pr-6 pl-6 relative">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[11px] font-medium mb-6 animate-fade-in shadow-[0_0_20px_rgba(16,185,129,0.15)] backdrop-blur-sm border-neutral-500/20 bg-neutral-500/10 text-neutral-700 dark:text-neutral-300" style="">
-        <span class="relative flex h-2 w-2">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-neutral-400" style=""></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-neutral-500" style=""></span>
-        </span>
-        <span class="" style="">The Next Gen Brokerage!</span>
-      </div>
-
-      <h1 class="text-5xl md:text-7xl font-semibold tracking-tight dark:text-white leading-[1.1] animate-slide-up mb-6 text-neutral-900" style="">
-        Keep More Commission. <br>
-        <span class="bg-clip-text text-transparent bg-gradient-to-br from-neutral-500 to-[#ff7300]">Work Smarter with AI.</span>
-      </h1>
-
-      <p class="text-lg md:text-xl font-light max-w-2xl mx-auto mb-10 animate-slide-up-delayed opacity-0 text-neutral-600 dark:text-neutral-400" style="animation-delay: 0.2s;">
-        Listo is a next-generation real estate brokerage designed to support modern agents with transparent commissions and built-in technology. <span class="font-medium text-neutral-900 dark:text-neutral-200" style="">No membership fees. No contracts.</span>
-      </p>
-
-      <!-- Mobile Input Form -->
-      <div class="w-full max-w-md mx-auto animate-slide-up-delayed opacity-0" style="animation-delay: 0.3s;">
-        <form class="flex items-center p-1.5 bg-white dark:bg-[#0a0a0c] border dark:border-white/10 rounded-xl shadow-xl input-group transition-all border-neutral-200" style="">
-          <div class="pl-4 text-neutral-400" style="">
-            <iconify-icon icon="solar:phone-calling-linear" width="20"></iconify-icon>
-          </div>
-          <input id="join-input" type="tel" placeholder="Enter your mobile number" class="w-full bg-transparent border-none focus:ring-0 text-sm dark:text-white px-3 py-2 outline-none text-neutral-900 placeholder:text-neutral-500" style="">
-          <button type="button" class="whitespace-nowrap text-white text-xs font-semibold px-5 py-2.5 rounded-lg transition-colors shadow-lg bg-neutral-600 hover:bg-neutral-500 shadow-neutral-500/20" style="">
-            Get Started
-          </button>
-        </form>
-        <div class="flex items-center justify-center gap-4 mt-4 text-[10px] uppercase tracking-widest font-mono text-neutral-500" style="">
-          <span class="flex items-center gap-1"><iconify-icon icon="solar:check-circle-linear" class="text-neutral-500" style=""></iconify-icon> No Credit Check</span>
-          <span class="flex items-center gap-1"><iconify-icon icon="solar:check-circle-linear" class="text-neutral-500" style=""></iconify-icon> Instant Onboarding</span>
+    <!-- Navigation -->
+    <nav class="flex sticky z-40 transition-all duration-300 bg-[#F9FAFB]/90 w-full max-w-7xl border-b border-transparent pt-4 pr-6 pb-4 pl-6 top-0 backdrop-blur-md items-center justify-between">
+        <!-- Logo -->
+        <a href="#" class="block flex items-center gap-2 group">
+            <div class="w-8 h-8 bg-black text-white rounded-lg flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
+                <iconify-icon icon="solar:bolt-bold" width="18"></iconify-icon>
+            </div>
+            <span class="font-bold text-xl tracking-tight text-gray-900">Listo OS</span>
+        </a>
+        
+        <!-- Actions -->
+        <div class="flex items-center gap-4">
+            <a href="#demo" class="hidden md:block text-sm font-medium text-gray-500 hover:text-black transition-colors">Book a Demo</a>
+            <button onclick="toggleModal(true)" class="transition-all duration-300 active:scale-95 hover:bg-black hover:text-white hover:shadow-[0_0_20px_rgba(0,0,0,0.15)] text-sm font-semibold text-black bg-transparent border-black border rounded-full pt-2 pr-5 pb-2 pl-5 shadow-none">
+                Join Listo
+            </button>
         </div>
-      </div>
-    </div>
+    </nav>
 
-    <!-- 3D Dashboard Visualization -->
-    <div class="dashboard-container z-20 animate-slide-up-delayed opacity-0 w-full max-w-5xl mt-20 mr-auto ml-auto pr-4 pl-4 relative" style="animation-delay: 0.5s">
-      <div class="dashboard-ui relative w-full rounded-xl bg-white dark:bg-[#0a0a0c] overflow-hidden border dark:border-white/5 border-neutral-200">
-        <!-- Header -->
-        <div class="h-9 border-b dark:bg-white/[0.02] dark:border-white/5 flex items-center px-4 justify-between select-none bg-neutral-50 border-neutral-200" style="">
-          <div class="flex gap-1.5 opacity-60">
-            <div class="w-2.5 h-2.5 rounded-full dark:bg-white/20 bg-neutral-300" style=""></div>
-            <div class="w-2.5 h-2.5 rounded-full dark:bg-white/20 bg-neutral-300" style=""></div>
-          </div>
-          <div class="text-[10px] font-mono tracking-widest uppercase flex items-center gap-2 text-neutral-400" style="">
-            <iconify-icon icon="solar:shield-check-linear" width="12"></iconify-icon>
-            Listo_Agent_Portal
-          </div>
-          <div class="w-10"></div>
-        </div>
+    <!-- Main Container -->
+    <main class="w-full max-w-7xl pt-12 pr-6 pb-36 md:pb-24 pl-6 space-y-24 md:space-y-32">
 
-        <!-- Dashboard Content -->
-        <div class="p-6 md:p-10 dark:bg-[#030304] grid grid-cols-1 md:grid-cols-3 gap-6 bg-neutral-50/50" style="">
-           <!-- Card 1: Commission -->
-           <div class="bg-white dark:bg-[#0e0e10] p-5 rounded-xl border dark:border-white/5 shadow-sm border-neutral-100" style="">
-              <div class="flex justify-between items-start mb-4">
-                 <div class="w-10 h-10 rounded-full flex items-center justify-center bg-neutral-50 dark:bg-neutral-500/10 text-neutral-600 dark:text-neutral-400" style="">
-                    <iconify-icon icon="solar:wallet-money-linear" width="20"></iconify-icon>
-                 </div>
-                 <span class="text-[10px] px-2 py-0.5 rounded-full font-medium bg-neutral-100 dark:bg-neutral-900/30 text-neutral-700 dark:text-neutral-300" style="">YTD</span>
-              </div>
-              <p class="text-xs mb-1 text-neutral-500" style="">Total Commission Kept</p>
-              <h3 class="text-2xl font-semibold dark:text-white text-neutral-900" style="">$142,500</h3>
-              <div class="mt-4 h-1 w-full dark:bg-white/5 rounded-full overflow-hidden bg-neutral-100" style="">
-                 <div class="h-full w-[85%] rounded-full bg-neutral-500" style=""></div>
-              </div>
-           </div>
-
-           <!-- Card 2: Active Listings -->
-           <div class="bg-white dark:bg-[#0e0e10] p-5 rounded-xl border dark:border-white/5 shadow-sm border-neutral-100" style="">
-              <div class="flex justify-between items-start mb-4">
-                 <div class="w-10 h-10 rounded-full flex items-center justify-center bg-neutral-50 dark:bg-neutral-500/10 text-neutral-600 dark:text-neutral-400" style="">
-                    <iconify-icon icon="solar:home-linear" width="20"></iconify-icon>
-                 </div>
-                 <span class="text-[10px] px-2 py-0.5 rounded-full font-medium bg-neutral-100 dark:bg-neutral-900/30 text-neutral-700 dark:text-neutral-300" style="">Active</span>
-              </div>
-              <div class="space-y-3">
-                 <div class="flex items-center gap-3 pb-3 border-b dark:border-white/5 border-neutral-50" style="">
-                    <div class="dark:bg-white/10 bg-amber-400 w-8 h-8 rounded"></div>
-                    <div>
-                       <div class="text-xs font-medium dark:text-white text-neutral-900" style="">128 Maple Drive</div>
-                       <div class="text-[10px] text-neutral-500" style="">Offer Pending</div>
+        <!-- Hero Section -->
+        <section class="relative">
+            <div class="flex flex-col lg:flex-row lg:items-center gap-12 lg:justify-between">
+                <!-- Left: Headline -->
+                <div class="lg:w-[55%] space-y-6">
+                    <div class="overline inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-50 border border-orange-100">
+                        <span class="w-2 h-2 rounded-full bg-orange-600 animate-pulse"></span>
+                        Now accepting new agents
                     </div>
-                 </div>
-                 <div class="flex items-center gap-3">
-                    <div class="dark:bg-white/10 bg-amber-400 w-8 h-8 rounded"></div>
-                    <div class="">
-                       <div class="text-xs font-medium dark:text-white text-neutral-900" style="">55 Oceanview</div>
-                       <div class="text-[10px] text-neutral-500" style="">Scheduled Viewing</div>
+                    
+                    <h1 class="hero-title text-balance">
+                        Canada’s First AI-Powered Brokerage <br>
+                        <span class="text-orange-600">
+                            <span class="hero-rotating-wrap" id="hero-rotating-wrap">
+                                <span class="hero-rotating-word" data-index="0">CRM</span>
+                                <span class="hero-rotating-word hero-rotating-hidden" data-index="1">Autopilot System</span>
+                                <span class="hero-rotating-word hero-rotating-hidden" data-index="2">Operating System</span>
+                            </span> / Built for Realtors.
+                        </span>
+                    </h1>
+                    
+                    <p class="hero-subtitle max-w-lg">
+                        All-in-one CRM, AI voice agents, lead generation, marketing, compliance, and admin support — under one powerful system.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                        <button onclick="toggleModal(true)" class="btn-text bg-black text-white px-8 py-3.5 rounded-full hover:bg-gray-800 transition-all shadow-[0_4px_14px_0_rgba(0,0,0,0.2)] active:scale-95 flex items-center justify-center gap-2">
+                            Join Listo
+                            <iconify-icon icon="solar:arrow-right-linear" width="20"></iconify-icon>
+                        </button>
+                        <a href="#demo" class="btn-text bg-white text-gray-900 border border-gray-200 px-8 py-3.5 rounded-full hover:bg-gray-50 transition-all shadow-sm active:scale-95 flex items-center justify-center">
+                            Book a Demo
+                        </a>
                     </div>
-                 </div>
-              </div>
-           </div>
 
-           <!-- Card 3: AI Tasks -->
-           <div class="bg-white dark:bg-[#0e0e10] p-5 rounded-xl border dark:border-white/5 shadow-sm border-neutral-100" style="">
-              <div class="flex justify-between items-start mb-4">
-                 <div class="w-10 h-10 rounded-full flex items-center justify-center bg-neutral-50 dark:bg-neutral-500/10 text-neutral-600 dark:text-neutral-400" style="">
-                    <iconify-icon icon="solar:magic-stick-3-linear" width="20"></iconify-icon>
-                 </div>
-                 <span class="text-[10px] font-mono text-neutral-400" style="">AUTO</span>
-              </div>
-              <p class="text-xs mb-3 text-neutral-500" style="">Recent AI Actions</p>
-              <div class="space-y-2">
-                 <div class="text-[10px] flex gap-2 items-center text-neutral-600 dark:text-neutral-400" style="">
-                    <iconify-icon icon="solar:check-circle-linear" class="text-neutral-500" style=""></iconify-icon>
-                    Sent open house follow-up
-                 </div>
-                 <div class="text-[10px] flex gap-2 items-center text-neutral-600 dark:text-neutral-400" style="">
-                    <iconify-icon icon="solar:check-circle-linear" class="text-neutral-500" style=""></iconify-icon>
-                    Scheduled showing (Lead #402)
-                 </div>
-                 <div class="text-[10px] flex gap-2 items-center text-neutral-600 dark:text-neutral-400" style="">
-                    <iconify-icon icon="solar:check-circle-linear" class="text-neutral-500" style=""></iconify-icon>
-                    Generated listing flyer
-                 </div>
-              </div>
-           </div>
-        </div>
-      </div>
-    </div>
-    <div class="horizon-ring"></div>
-  </main>
-
-  <!-- COMMISSION SECTION -->
-  <section id="commission" class="py-24 relative border-t dark:border-white/5 border-neutral-200" style="">
-    <div class="absolute inset-0 dark:bg-[#020204]/70 -z-10 bg-neutral-50/20" style=""></div>
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="text-center mb-16 max-w-3xl mx-auto">
-        <h2 class="text-3xl md:text-4xl font-semibold dark:text-white mb-6 text-neutral-900" style="">Commission Structure</h2>
-        <p class="text-lg font-light text-neutral-600 dark:text-neutral-400" style="">Simple. Transparent. Agent-First. Keep more of what you earn.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-         <!-- Flat Fee -->
-         <div class="col-span-1 overflow-hidden group md:col-span-2 text-white bg-gradient-to-br from-[#ff8800] to-[#000000] rounded-2xl px-8 py-8 relative shadow-xl">
-            <div class="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all"></div>
-            <div class="relative z-10">
-               <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-6">
-                  <iconify-icon icon="solar:pie-chart-2-linear" width="24" class="text-white"></iconify-icon>
-               </div>
-               <h3 class="text-3xl font-bold mb-2">10% Broker Fee</h3>
-               <p class="font-light mb-6 text-neutral-100" style="">Simple flat commission split. No hidden tiers or caps to worry about.</p>
-               <ul class="space-y-2 text-sm font-medium">
-                  <li class="flex items-center gap-2"><iconify-icon icon="solar:check-circle-bold" width="16"></iconify-icon> Transparent reporting</li>
-                  <li class="flex items-center gap-2"><iconify-icon icon="solar:check-circle-bold" width="16"></iconify-icon> Paid immediately on closing</li>
-               </ul>
-            </div>
-         </div>
-
-         <!-- Zero Fees -->
-         <div class="col-span-1 md:col-span-2 p-8 rounded-2xl bg-white dark:bg-[#0a0a0c] border dark:border-white/10 shadow-lg relative group transition-colors hover:border-neutral-500/30 border-neutral-200" style="">
-            <div class="relative z-10">
-               <div class="w-12 h-12 rounded-xl dark:bg-white/5 flex items-center justify-center mb-6 dark:text-white bg-neutral-100 text-neutral-900" style="">
-                  <iconify-icon icon="solar:forbidden-circle-linear" width="24"></iconify-icon>
-               </div>
-               <h3 class="text-2xl font-semibold dark:text-white mb-2 text-neutral-900" style="">Zero Monthly Costs</h3>
-               <p class="font-light mb-6 text-neutral-500 dark:text-neutral-400" style="">We don't believe in charging you to work here.</p>
-               <div class="grid grid-cols-2 gap-4">
-                  <div class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300" style="">
-                     <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] bg-neutral-100 dark:bg-neutral-900/30 text-neutral-600 dark:text-neutral-400" style=""><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>
-                     No Membership Fees
-                  </div>
-                  <div class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300" style="">
-                     <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] bg-neutral-100 dark:bg-neutral-900/30 text-neutral-600 dark:text-neutral-400" style=""><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>
-                     No Desk Fees
-                  </div>
-                  <div class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300" style="">
-                     <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] bg-neutral-100 dark:bg-neutral-900/30 text-neutral-600 dark:text-neutral-400" style=""><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>
-                     No CRM Charges
-                  </div>
-                  <div class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300" style="">
-                     <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] bg-neutral-100 dark:bg-neutral-900/30 text-neutral-600 dark:text-neutral-400" style=""><iconify-icon icon="solar:check-read-linear"></iconify-icon></span>
-                     No Credit Check
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-      
-      <!-- Referral Banner -->
-      <div class="mt-8 p-8 rounded-2xl bg-gradient-to-r border flex flex-col md:flex-row items-center justify-between gap-6 to-neutral-50 dark:to-neutral-900/10 from-neutral-50 dark:from-neutral-900/10 border-neutral-100 dark:border-neutral-500/10" style="">
-         <div class="">
-            <div class="flex items-center gap-2 mb-2 text-neutral-600 dark:text-neutral-400" style="">
-               <iconify-icon icon="solar:users-group-rounded-linear" width="20"></iconify-icon>
-               <span class="text-xs font-bold uppercase tracking-wider">Referral Program</span>
-            </div>
-            <h3 class="text-xl font-semibold dark:text-white mb-2 text-neutral-900" style="">Refer Agents, Earn Forever</h3>
-            <p class="text-sm max-w-xl text-neutral-600 dark:text-neutral-400" style="">
-               Refer another realtor to Listo and receive <span class="font-semibold text-neutral-600 dark:text-neutral-400" style="">10% of their broker fee</span> when they complete a transaction. Fully tracked, transparent reporting, ongoing income.
-            </p>
-         </div>
-         <div class="shrink-0">
-            <span class="text-3xl font-bold text-neutral-600 dark:text-neutral-400" style="">10%</span>
-            <span class="block text-xs text-center text-neutral-500" style="">of broker fee</span>
-         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TECH & GROWTH SECTION -->
-  <section id="technology" class="py-24 relative border-t dark:border-white/5 bg-white dark:bg-[#020204] border-neutral-200" style="">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-         <div class="max-w-2xl">
-            <h2 class="text-3xl md:text-4xl font-semibold dark:text-white mb-4 text-neutral-900" style="">Technology that handles the rest.</h2>
-            <p class="text-lg font-light text-neutral-600 dark:text-neutral-400" style="">
-               Focus on client relationships. Our platform combines fair compensation with advanced automation.
-            </p>
-         </div>
-         <div class="px-4 py-2 rounded-lg text-sm font-medium border bg-neutral-100 dark:bg-neutral-900/20 text-neutral-800 dark:text-neutral-300 border-neutral-200 dark:border-neutral-500/20" style="">
-            Includes $1,000 Marketing Credit
-         </div>
-      </div>
-
-      <!-- BENTO GRID -->
-      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[250px]">
-         
-         <!-- Tile 1: AI Calling (Large) -->
-         <div class="col-span-1 md:col-span-2 row-span-2 rounded-2xl dark:bg-[#0a0a0c] border dark:border-white/10 p-8 flex flex-col justify-between relative overflow-hidden group transition-all hover:border-neutral-500/20 bg-neutral-50 border-neutral-200" style="">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.05),transparent_40%)]"></div>
-            <div>
-               <div class="w-10 h-10 rounded-lg bg-white dark:bg-white/10 border dark:border-white/10 flex items-center justify-center dark:text-white mb-6 shadow-sm border-neutral-200 text-neutral-900" style="">
-                  <iconify-icon icon="solar:phone-calling-rounded-linear" width="20"></iconify-icon>
-               </div>
-               <h3 class="text-xl font-semibold dark:text-white mb-2 text-neutral-900" style="">Automated Calling &amp; Smart Scripts</h3>
-               <p class="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400" style="">
-                  AI-assisted outbound and follow-up calls with context-aware scripting. Calls are automatically logged and tracked in your CRM.
-               </p>
-            </div>
-            <div class="mt-6 flex flex-col gap-2">
-               <div class="flex items-center gap-3 p-3 bg-white dark:bg-white/5 rounded-lg border dark:border-white/5 border-neutral-100" style="">
-                  <div class="w-2 h-2 rounded-full animate-pulse bg-neutral-500" style=""></div>
-                  <span class="text-xs font-mono text-neutral-500" style="">AI calling Lead #992...</span>
-               </div>
-               <div class="flex items-center gap-3 p-3 bg-white dark:bg-white/5 rounded-lg border dark:border-white/5 opacity-60 border-neutral-100" style="">
-                  <div class="w-2 h-2 rounded-full bg-neutral-300 dark:bg-neutral-600" style=""></div>
-                  <span class="text-xs font-mono text-neutral-500" style="">Log: "Interested in viewing..."</span>
-               </div>
-            </div>
-         </div>
-
-         <!-- Tile 2: CRM (Tall) -->
-         <div class="col-span-1 row-span-2 rounded-2xl dark:bg-[#0a0a0c] border dark:border-white/10 p-8 flex flex-col relative overflow-hidden group transition-all hover:border-neutral-500/20 bg-neutral-50 border-neutral-200" style="">
-            <div class="w-10 h-10 rounded-lg bg-white dark:bg-white/10 border dark:border-white/10 flex items-center justify-center dark:text-white mb-6 shadow-sm border-neutral-200 text-neutral-900" style="">
-               <iconify-icon icon="solar:chart-2-linear" width="20"></iconify-icon>
-            </div>
-            <h3 class="text-xl font-semibold dark:text-white mb-2 text-neutral-900" style="">Built-In CRM</h3>
-            <p class="text-sm mb-8 text-neutral-600 dark:text-neutral-400" style="">
-               Fully integrated. No third-party subscriptions required. Manage contacts, pipelines, and tasks.
-            </p>
-            <div class="flex-1 bg-white dark:bg-[#0e0e10] rounded-t-xl border-t border-x dark:border-white/10 p-4 shadow-sm relative top-2 border-neutral-200" style="">
-               <div class="flex gap-2 mb-3">
-                  <div class="h-1.5 w-full rounded-full bg-neutral-500" style=""></div>
-                  <div class="h-1.5 w-1/3 dark:bg-white/10 rounded-full bg-neutral-200" style=""></div>
-               </div>
-               <div class="space-y-2">
-                  <div class="h-8 w-full dark:bg-white/5 rounded border dark:border-white/5 bg-neutral-50 border-neutral-100" style=""></div>
-                  <div class="h-8 w-full dark:bg-white/5 rounded border dark:border-white/5 bg-neutral-50 border-neutral-100" style=""></div>
-               </div>
-            </div>
-         </div>
-
-         <!-- Tile 3: Marketing Credit -->
-         <div class="col-span-1 md:col-span-1 rounded-2xl bg-gradient-to-br p-8 text-white flex flex-col justify-center relative overflow-hidden from-neutral-900 to-neutral-800 dark:from-neutral-800 dark:to-neutral-900" style="">
-            <div class="absolute top-0 right-0 w-24 h-24 blur-3xl rounded-full bg-neutral-500/20" style=""></div>
-            <h3 class="text-3xl font-bold mb-1">$1,000</h3>
-            <p class="text-sm font-medium mb-4 text-neutral-300" style="">Platform Credit</p>
-            <p class="text-xs leading-relaxed text-neutral-400" style="">
-               For every newly onboarded agent. Use for AI automations, Meta ads, or campaigns.
-            </p>
-         </div>
-
-         <!-- Tile 4: Social Media -->
-         <div class="col-span-1 md:col-span-1 rounded-2xl dark:bg-[#0a0a0c] border dark:border-white/10 p-8 flex flex-col justify-between transition-all hover:border-neutral-500/20 bg-neutral-50 border-neutral-200" style="">
-            <div class="">
-               <iconify-icon icon="solar:smartphone-linear" width="24" class="dark:text-white mb-4 text-neutral-900" style=""></iconify-icon>
-               <h3 class="text-lg font-semibold dark:text-white text-neutral-900" style="">Social Media</h3>
-               <p class="text-xs mt-2 text-neutral-600 dark:text-neutral-400" style="">Post scheduling &amp; engagement tracking included.</p>
-            </div>
-         </div>
-
-         <!-- Tile 5: Listing Marketing (Wide) -->
-         <div class="col-span-1 md:col-span-2 rounded-2xl dark:bg-[#0a0a0c] border dark:border-white/10 p-8 flex flex-col md:flex-row gap-8 items-center transition-all bg-neutral-50 border-neutral-200 hover:border-neutral-500/20" style="">
-            <div class="flex-1">
-               <h3 class="text-xl font-semibold dark:text-white mb-2 text-neutral-900" style="">Listing Marketing &amp; Digital Assets</h3>
-               <p class="text-sm leading-relaxed mb-4 text-neutral-600 dark:text-neutral-400" style="">
-                  Every listing gets a dedicated landing page, hosted property page, and professional flyers. All infrastructure included.
-               </p>
-               <div class="flex gap-2">
-                  <span class="px-2 py-1 bg-white dark:bg-white/10 border dark:border-white/10 rounded text-[10px] border-neutral-200 text-neutral-600 dark:text-neutral-300" style="">Dedicated Pages</span>
-                  <span class="px-2 py-1 bg-white dark:bg-white/10 border dark:border-white/10 rounded text-[10px] border-neutral-200 text-neutral-600 dark:text-neutral-300" style="">Flyers</span>
-               </div>
-            </div>
-            <div class="w-full md:w-1/3 aspect-video bg-white dark:bg-[#0e0e10] rounded-lg shadow-sm border dark:border-white/5 flex items-center justify-center relative overflow-hidden border-neutral-200" style="">
-                <!-- Mini mock landing page -->
-                <div class="absolute inset-0 dark:bg-white/5 m-2 rounded bg-neutral-100" style=""></div>
-                <div class="absolute bottom-4 left-4 right-4 h-2 dark:bg-white/10 rounded-full w-1/2 bg-neutral-200" style=""></div>
-            </div>
-         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- COMPARISON SECTION -->
-  <section id="compare" class="py-24 border-t dark:border-white/5 dark:bg-white/[0.02] relative overflow-hidden border-neutral-200 bg-neutral-50/50" style="">
-    <div class="max-w-5xl mx-auto px-6 relative z-10">
-       <div class="text-center mb-16">
-          <h2 class="text-3xl font-semibold dark:text-white mb-4 text-neutral-900" style="">A Brokerage Built for Profit</h2>
-          <p class="text-neutral-600 dark:text-neutral-400" style="">Stop paying for the privilege of working. Start keeping your commission.</p>
-       </div>
-
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-          
-          <!-- Traditional Side -->
-          <div class="rounded-3xl p-8 bg-white/80 dark:bg-[#0a0a0c]/80 border dark:border-white/10 backdrop-blur-sm grayscale-[30%] opacity-90 hover:opacity-100 transition-opacity border-neutral-200" style="">
-             <div class="flex items-center gap-3 mb-8">
-                <div class="w-10 h-10 rounded-full dark:bg-white/5 flex items-center justify-center bg-neutral-100 text-neutral-500" style="">
-                   <iconify-icon icon="solar:building-3-linear" width="20"></iconify-icon>
+                    <!-- Features Tags -->
+                    <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500 font-medium pt-2">
+                        <div class="flex items-center gap-2">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-orange-600"></iconify-icon>
+                            No agent subscription fees
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-orange-600"></iconify-icon>
+                            AI handles leads &amp; booking
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-orange-600"></iconify-icon>
+                            Brokerage-controlled workflows
+                        </div>
+                    </div>
                 </div>
+                
+                <!-- Right: Visual -->
+                <div class="lg:w-[40%] relative">
+                    <!-- Card Stack Visual -->
+                    <div class="relative z-10 w-full aspect-square max-w-[500px] mx-auto">
+                        <!-- Back Card -->
+                        <div class="absolute top-8 right-8 w-full h-full bg-gray-50 rounded-3xl border border-gray-100 shadow-sm rotate-6 opacity-60"></div>
+                        <!-- Middle Card -->
+                        <div class="absolute top-4 right-4 w-full h-full bg-white rounded-3xl border border-gray-100 shadow-lg rotate-3 flex items-center justify-center p-8">
+                            <div class="w-full h-full flex flex-col gap-4 opacity-30">
+                                <div class="w-12 h-12 bg-gray-100 rounded-full"></div>
+                                <div class="w-3/4 h-4 bg-gray-100 rounded"></div>
+                                <div class="w-1/2 h-4 bg-gray-100 rounded"></div>
+                                <div class="mt-auto w-full h-32 bg-gray-50 rounded-xl"></div>
+                            </div>
+                        </div>
+                        <!-- Front Card (Active UI) -->
+                        <div class="absolute top-0 right-0 w-full h-full bg-white rounded-3xl border border-gray-200 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] p-6 flex flex-col justify-between overflow-hidden">
+                            <!-- Header -->
+                            <div class="flex justify-between items-center mb-6">
+                                <div>
+                                    <div class="text-xs font-semibold text-gray-400 uppercase tracking-wide">New Lead</div>
+                                    <div class="text-lg font-semibold text-gray-900">Sarah Jenkins</div>
+                                </div>
+                                <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600 animate-pulse">
+                                    <iconify-icon icon="solar:phone-calling-linear" width="20"></iconify-icon>
+                                </div>
+                            </div>
+                            
+                            <!-- AI Chat Simulation -->
+                            <div class="space-y-4 text-sm">
+                                <div class="bg-gray-50 p-3 rounded-2xl rounded-tl-none max-w-[85%]">
+                                    <p class="text-gray-600">Hi Sarah! I saw you were looking at the detached home on Maple Ave. When are you free to view it?</p>
+                                    <div class="text-[10px] text-gray-400 mt-1 flex items-center gap-1">
+                                        <iconify-icon icon="solar:robot-linear"></iconify-icon> Listo AI • Just now
+                                    </div>
+                                </div>
+                                <div class="bg-orange-600 text-white p-3 rounded-2xl rounded-tr-none max-w-[85%] ml-auto shadow-md">
+                                    <p>I'm actually free this Thursday afternoon!</p>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-2xl rounded-tl-none max-w-[85%]">
+                                    <p class="text-gray-600">Perfect. I've booked a viewing for 2:00 PM Thursday. Calendar invite sent!</p>
+                                </div>
+                            </div>
+
+                            <!-- Action -->
+                            <div class="mt-6 pt-6 border-t border-gray-100 flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-xs font-medium text-gray-500">
+                                    <iconify-icon icon="solar:calendar-check-linear" class="text-orange-600"></iconify-icon>
+                                    Appointment Confirmed
+                                </div>
+                                <div class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
+                                    Qualified Buyer
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose Listo / What is Listo -->
+        <section class="flex flex-col gap-12">
+            <div class="flex flex-col md:flex-row gap-12 justify-between items-end mb-8">
+                <div class="max-w-xl space-y-4">
+                    <h2 class="section-title text-balance">Why Realtors Choose Listo</h2>
+                    <p class="section-lead">
+                        Traditional brokerages weren’t built for today’s speed. Listo is designed to grow with you, offering end-to-end support without the manual grind.
+                    </p>
+                </div>
+                <div class="flex flex-col gap-2 text-sm font-medium text-gray-600 min-w-[200px]">
+                    <div class="flex items-center gap-2">
+                        <iconify-icon icon="solar:graph-up-linear" class="text-green-500"></iconify-icon>
+                        Higher booking rates
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <iconify-icon icon="solar:user-check-linear" class="text-green-500"></iconify-icon>
+                        More closed deals
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <iconify-icon icon="solar:heart-linear" class="text-green-500"></iconify-icon>
+                        Less agent burnout
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bento Grid - What Is Listo OS -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Large Card: Complete OS -->
+                <div class="md:col-span-2 rounded-[2rem] p-8 md:p-10 flex flex-col justify-between group transition-all duration-300 relative overflow-hidden border border-gray-200/80 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 hover:border-orange-500/30 hover:shadow-[0_20px_50px_-15px_rgba(234,88,12,0.15)]">
+                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_70%_0%,rgba(234,88,12,0.12),transparent)] pointer-events-none"></div>
+                    <div class="relative z-10 flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
+                        <div class="flex-shrink-0">
+                            <div class="w-14 h-14 rounded-2xl bg-orange-500/20 border border-orange-400/30 text-orange-400 flex items-center justify-center">
+                                <iconify-icon icon="solar:laptop-linear" width="28" stroke-width="1.5"></iconify-icon>
+                            </div>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <h3 class="text-xl md:text-2xl font-semibold tracking-tight text-white mb-2">The Complete Real Estate OS</h3>
+                            <p class="text-gray-400 text-[0.9375rem] leading-relaxed mb-5 max-w-lg">
+                                From first click to closing.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-xs font-medium">Lead Gen</span>
+                                <span class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-xs font-medium">Smart CRM</span>
+                                <span class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-xs font-medium">AI Voice Calling</span>
+                                <span class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-xs font-medium">Automated Follow-ups</span>
+                                <span class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-xs font-medium">Transaction Workflow</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card: No Fees -->
+                <div class="bg-orange-600 text-white rounded-[2rem] p-8 shadow-lg flex flex-col justify-between group relative overflow-hidden">
+                    <div class="space-y-4 relative z-10">
+                        <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
+                            <iconify-icon icon="solar:wallet-linear" width="24" stroke-width="1.5"></iconify-icon>
+                        </div>
+                        <ul class="text-xl md:text-2xl font-semibold tracking-tight leading-snug space-y-2 list-disc list-inside text-white">
+                            <li>No software subscriptions.</li>
+                            <li>No membership fees.</li>
+                            <li>No desk fees.</li>
+                            <li>No CRM charges.</li>
+                        </ul>
+                    </div>
+                    <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+                </div>
+
+                <!-- Card: AI Voice -->
+                <div class="bg-white rounded-[2rem] p-8 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col justify-between group hover:-translate-y-1 transition-transform">
+                    <div class="space-y-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                            <iconify-icon icon="solar:phone-calling-linear" width="20"></iconify-icon>
+                        </div>
+                        <h3 class="card-title">AI Voice Agents</h3>
+                        <p class="card-desc">Calls new leads instantly, 24/7. Zero missed opportunities.</p>
+                    </div>
+                </div>
+
+                <!-- Card: CRM -->
+                <div class="bg-white rounded-[2rem] p-8 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col justify-between group hover:-translate-y-1 transition-transform">
+                    <div class="space-y-3">
+                        <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                            <iconify-icon icon="solar:users-group-two-rounded-linear" width="20"></iconify-icon>
+                        </div>
+                        <h3 class="card-title">Smart Pipeline</h3>
+                        <p class="card-desc">Auto-tags, routes, and tracks leads. Visual pipelines for deals.</p>
+                    </div>
+                </div>
+
+                <!-- Card: Automation -->
+                <div class="bg-white rounded-[2rem] p-8 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col justify-between group hover:-translate-y-1 transition-transform">
+                    <div class="space-y-3">
+                        <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
+                            <iconify-icon icon="solar:calendar-mark-linear" width="20"></iconify-icon>
+                        </div>
+                        <h3 class="card-title">Auto-Booking</h3>
+                        <p class="card-desc">Syncs calendars and books appointments while you sleep.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it Works (Timeline/Process) -->
+        <section class="py-10">
+            <div class="text-center mb-16 space-y-4 listo-step-header">
+                <h2 class="section-title text-balance">How Listo AI Works End-to-End</h2>
+                <p class="section-lead max-w-2xl mx-auto">Smart lead engagement and appointment automation that feels human.</p>
+            </div>
+
+            <div class="relative">
+                <!-- Connecting Line (Desktop) -->
+                <div class="absolute left-1/2 top-0 bottom-0 w-px bg-gray-200 -translate-x-1/2 hidden md:block"></div>
+
+                <div class="space-y-12">
+                    <!-- Step 1 -->
+                    <div class="listo-step relative flex flex-col md:flex-row items-center justify-between gap-8 group">
+                        <div class="md:w-[45%] md:text-right space-y-2">
+                            <h3 class="text-xl font-semibold text-gray-900">Leads Enter System</h3>
+                            <p class="text-gray-500 text-sm">Leads from website forms, ads, portals, and referrals sync instantly into Listo.</p>
+                        </div>
+                        <div class="step-num absolute left-1/2 -translate-x-1/2 w-10 h-10 bg-white border-2 border-gray-200 group-hover:border-orange-600 rounded-full flex items-center justify-center text-gray-500 font-bold z-10 hidden md:flex">1</div>
+                        <div class="md:w-[45%] flex justify-start">
+                             <div class="step-icon p-3 bg-white rounded-2xl shadow-sm border border-gray-100">
+                                <iconify-icon icon="solar:login-2-linear" class="text-gray-400" width="24"></iconify-icon>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="listo-step relative flex flex-col md:flex-row-reverse items-center justify-between gap-8 group">
+                        <div class="md:w-[45%] md:text-left space-y-2">
+                            <h3 class="text-xl font-semibold text-gray-900">Smart CRM Intake</h3>
+                            <p class="text-gray-500 text-sm">Automatically tags sources, detects duplicates, and routes to the right agent.</p>
+                        </div>
+                        <div class="step-num absolute left-1/2 -translate-x-1/2 w-10 h-10 bg-white border-2 border-gray-200 group-hover:border-orange-600 rounded-full flex items-center justify-center text-gray-500 font-bold z-10 hidden md:flex">2</div>
+                        <div class="md:w-[45%] flex justify-end">
+                            <div class="step-icon p-3 bg-white rounded-2xl shadow-sm border border-gray-100">
+                                <iconify-icon icon="solar:tuning-square-2-linear" class="text-gray-400" width="24"></iconify-icon>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="listo-step relative flex flex-col md:flex-row items-center justify-between gap-8 group">
+                        <div class="md:w-[45%] md:text-right space-y-2">
+                            <h3 class="text-xl font-semibold text-gray-900">AI Instant Call</h3>
+                            <p class="text-gray-500 text-sm">Voice agents call new leads instantly with human-like conversation. 24/7 availability.</p>
+                        </div>
+                        <div class="step-num absolute left-1/2 -translate-x-1/2 w-10 h-10 bg-white border-2 border-gray-200 group-hover:border-orange-600 rounded-full flex items-center justify-center text-gray-500 font-bold z-10 hidden md:flex">3</div>
+                        <div class="md:w-[45%] flex justify-start">
+                             <div class="step-icon p-3 bg-white rounded-2xl shadow-sm border border-gray-100">
+                                <iconify-icon icon="solar:phone-calling-bold" class="text-gray-400" width="24"></iconify-icon>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 & 5 Combined Visually for brevity -->
+                    <div class="listo-step relative flex flex-col md:flex-row-reverse items-center justify-between gap-8 group">
+                        <div class="md:w-[45%] md:text-left space-y-2">
+                            <h3 class="text-xl font-semibold text-gray-900">Follow-up &amp; Qualification</h3>
+                            <p class="text-gray-500 text-sm">If no answer, auto-SMS/Email sequences start. AI qualifies budget, timeline, and motivation.</p>
+                        </div>
+                        <div class="step-num absolute left-1/2 -translate-x-1/2 w-10 h-10 bg-white border-2 border-gray-200 group-hover:border-orange-600 rounded-full flex items-center justify-center text-gray-500 font-bold z-10 hidden md:flex">4</div>
+                        <div class="md:w-[45%] flex justify-end">
+                            <div class="step-icon p-3 bg-white rounded-2xl shadow-sm border border-gray-100">
+                                <iconify-icon icon="solar:chat-round-dots-linear" class="text-gray-400" width="24"></iconify-icon>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 6 -->
+                    <div class="listo-step relative flex flex-col md:flex-row items-center justify-between gap-8 group">
+                        <div class="md:w-[45%] md:text-right space-y-2">
+                            <h3 class="text-xl font-semibold text-gray-900">Auto-Booking</h3>
+                            <p class="text-gray-500 text-sm">AI syncs calendars, sends confirmations, and assigns meetings to you.</p>
+                        </div>
+                        <div class="step-num absolute left-1/2 -translate-x-1/2 w-10 h-10 bg-white border-2 border-gray-200 group-hover:border-orange-600 rounded-full flex items-center justify-center text-gray-500 font-bold z-10 hidden md:flex">6</div>
+                        <div class="md:w-[45%] flex justify-start">
+                             <div class="step-icon p-3 bg-white rounded-2xl shadow-sm border border-gray-100">
+                                <iconify-icon icon="solar:calendar-add-linear" class="text-gray-400" width="24"></iconify-icon>
+                             </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Marketing & Intelligence Split -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Marketing Section -->
+            <div class="bg-gray-900 text-white rounded-[2.5rem] p-10 flex flex-col justify-between">
+                <div class="space-y-6">
+                    <h3 class="card-title text-white text-[1.35rem]">AI-Powered Marketing</h3>
+                    <p class="text-gray-400 text-[0.9375rem] leading-relaxed">Everything you need to stand out online, done for you.</p>
+                    
+                    <ul class="space-y-4 mt-6">
+                        <li class="flex items-start gap-3">
+                            <iconify-icon icon="solar:target-linear" class="text-orange-400 mt-1" width="20"></iconify-icon>
+                            <div>
+                                <div class="font-medium">Targeted Buyer Leads</div>
+                                <div class="text-sm text-gray-500">High-intent campaigns.</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <iconify-icon icon="solar:city-linear" class="text-orange-400 mt-1" width="20"></iconify-icon>
+                            <div>
+                                <div class="font-medium">Pre-Construction</div>
+                                <div class="text-sm text-gray-500">Qualified leads delivered to CRM.</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <iconify-icon icon="solar:mention-circle-linear" class="text-orange-400 mt-1" width="20"></iconify-icon>
+                            <div>
+                                <div class="font-medium">Social &amp; Email</div>
+                                <div class="text-sm text-gray-500">Consistent branding and nurturing.</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Intelligence Section -->
+            <div class="bg-white border border-gray-100 rounded-[2.5rem] p-10 flex flex-col justify-between shadow-sm">
+                <div class="space-y-6">
+                    <h3 class="card-title">Real-Time Intelligence</h3>
+                    <p class="card-desc">Make confident decisions backed by AI, not guesswork.</p>
+                    
+                    <div class="grid grid-cols-2 gap-4 mt-6">
+                        <div class="bg-gray-50 p-4 rounded-2xl">
+                            <div class="text-2xl font-semibold text-gray-900 mb-1">+4.2%</div>
+                            <div class="text-xs text-gray-500 uppercase font-medium">Market Prediction</div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-2xl">
+                            <div class="text-2xl font-semibold text-gray-900 mb-1">98%</div>
+                            <div class="text-xs text-gray-500 uppercase font-medium">Accuracy Score</div>
+                        </div>
+                        <div class="col-span-2 bg-orange-50 p-4 rounded-2xl flex items-center gap-3 text-orange-900">
+                            <iconify-icon icon="solar:magic-stick-3-linear" width="24"></iconify-icon>
+                            <span class="font-medium">Ideal home matching for buyers</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- More Than Brokerage / Support -->
+        <section class="space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-4">
+                <h2 class="section-title text-balance">More Than a Brokerage</h2>
+                <p class="section-lead">Built for long-term realtor success with full admin and compliance support.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Training -->
+                <div class="p-8 rounded-[2rem] bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                    <iconify-icon icon="solar:diploma-verified-linear" width="32" class="text-gray-900 mb-4"></iconify-icon>
+                    <h4 class="card-title text-lg mb-2">Training &amp; Mentorship</h4>
+                    <p class="card-desc">Day-one onboarding, personalized mentorship, and advanced mastery programs.</p>
+                </div>
+                <!-- Compliance -->
+                <div class="p-8 rounded-[2rem] bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                    <iconify-icon icon="solar:shield-check-linear" width="32" class="text-gray-900 mb-4"></iconify-icon>
+                    <h4 class="card-title text-lg mb-2">Full Compliance</h4>
+                    <p class="card-desc">Regulatory updates, transaction checks, and ethical guidance fully covered.</p>
+                </div>
+                <!-- Admin Support -->
+                <div class="p-8 rounded-[2rem] bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                    <iconify-icon icon="solar:documents-minimalistic-linear" width="32" class="text-gray-900 mb-4"></iconify-icon>
+                    <h4 class="card-title text-lg mb-2">Admin Support</h4>
+                    <p class="card-desc">Transaction coordination, paperwork, research, and client scheduling.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials (Cards) -->
+        <section class="bg-gray-50 rounded-[2.5rem] p-10 md:p-16">
+            <h2 class="section-title text-center mb-12">Real Agent Results</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Testimonial 1 -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                    <div class="flex items-center gap-1 text-yellow-400 mb-4">
+                        <iconify-icon icon="solar:star-bold"></iconify-icon>
+                        <iconify-icon icon="solar:star-bold"></iconify-icon>
+                        <iconify-icon icon="solar:star-bold"></iconify-icon>
+                        <iconify-icon icon="solar:star-bold"></iconify-icon>
+                        <iconify-icon icon="solar:star-bold"></iconify-icon>
+                    </div>
+                    <p class="text-gray-900 font-medium text-lg mb-6">
+                        "Listo completely changed how I work. The AI calls leads instantly, books appointments, and I just show up ready to close."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-xs font-bold text-gray-500">LR</div>
+                        <div>
+                            <div class="text-sm font-semibold text-gray-900">Licensed Realtor</div>
+                            <div class="text-xs text-gray-500">Ontario</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                    <div class="flex items-center gap-1 text-yellow-400 mb-4">
+                        <iconify-icon icon="solar:star-bold"></iconify-icon>
+                        <iconify-icon icon="solar:star-bold"></iconify-icon>
+                        <iconify-icon icon="solar:star-bold"></iconify-icon>
+                        <iconify-icon icon="solar:star-bold"></iconify-icon>
+                        <iconify-icon icon="solar:star-bold"></iconify-icon>
+                    </div>
+                    <p class="text-gray-900 font-medium text-lg mb-6">
+                        "What sold me was no monthly software fees. What kept me was the AI and admin support. It's a game changer."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-xs font-bold text-gray-500">SA</div>
+                        <div>
+                            <div class="text-sm font-semibold text-gray-900">Senior Agent</div>
+                            <div class="text-xs text-gray-500">GTA</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Agent Advantage Promo -->
+            <div class="mt-8 bg-black text-white p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6">
                 <div>
-                   <h3 class="text-lg font-semibold dark:text-white text-neutral-900" style="">Traditional Broker</h3>
-                   <p class="text-xs text-neutral-500" style="">The "Standard" Model</p>
+                    <h3 class="text-xl font-semibold mb-1">Refer an Agent &amp; Earn</h3>
+                    <p class="text-gray-400 text-sm">Earn 10% of the broker fee on every closed deal by agents you refer.</p>
                 </div>
-             </div>
+                <div class="px-4 py-2 bg-white/10 rounded-full text-sm font-medium border border-white/10 whitespace-nowrap">
+                    Passive Recurring Income
+                </div>
+            </div>
+        </section>
 
-             <ul class="space-y-6">
-                <li class="flex items-start gap-4">
-                   <iconify-icon icon="solar:close-circle-linear" class="mt-1 shrink-0 text-neutral-400" width="20" style=""></iconify-icon>
-                   <div class="">
-                      <p class="font-medium dark:text-white text-neutral-900" style="">Complex Splits (60-80%)</p>
-                      <p class="text-xs mt-1 text-neutral-500" style="">You surrender a massive chunk of every deal to the house.</p>
-                   </div>
-                </li>
-                <li class="flex items-start gap-4">
-                   <iconify-icon icon="solar:close-circle-linear" class="mt-1 shrink-0 text-neutral-400" width="20" style=""></iconify-icon>
-                   <div class="">
-                      <p class="font-medium dark:text-white text-neutral-900" style="">High Monthly Fees</p>
-                      <p class="text-xs mt-1 text-neutral-500" style="">Desk fees, franchise fees, and tech fees eat your income monthly.</p>
-                   </div>
-                </li>
-                
-                
-             </ul>
-          </div>
+        <!-- FAQ Section -->
+        <section class="max-w-3xl mx-auto w-full space-y-6">
+            <h2 class="section-title text-center mb-8">Frequently Asked Questions</h2>
+            
+            <div class="space-y-4">
+                <details class="group bg-white rounded-2xl border border-gray-100 p-4 [&amp;_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex items-center justify-between cursor-pointer list-none text-gray-900 font-medium">
+                        <span>Do agents really pay no subscription fees?</span>
+                        <span class="transition group-open:rotate-180">
+                            <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon>
+                        </span>
+                    </summary>
+                    <div class="text-gray-500 text-sm mt-3 leading-relaxed">
+                        Yes. Listo does not charge agents monthly software fees. We succeed when you succeed.
+                    </div>
+                </details>
 
-          <!-- Listo Side -->
-          <div class="rounded-3xl p-8 dark:bg-[#0a0a0c] border relative overflow-hidden shadow-2xl bg-neutral-50/10 border-neutral-500/20 dark:border-neutral-500/20 shadow-neutral-900/10" style="">
-             <div class="absolute inset-0 pointer-events-none bg-neutral-500/5" style=""></div>
-             <div class="absolute -top-24 -right-24 w-48 h-48 blur-3xl rounded-full bg-neutral-500/20" style=""></div>
-             
-             <div class="relative z-10">
-               <div class="flex items-center justify-between mb-8">
-                  <div class="flex items-center gap-3">
-                     <div class="w-10 h-10 rounded-full flex items-center justify-center bg-neutral-100 dark:bg-neutral-500/20 text-neutral-600 dark:text-neutral-400" style="">
-                        <iconify-icon icon="solar:stars-minimalistic-linear" width="20"></iconify-icon>
-                     </div>
-                     <div>
-                        <h3 class="text-lg font-semibold dark:text-white text-neutral-900" style="">Listo Model</h3>
-                        <p class="text-xs font-medium text-neutral-600 dark:text-neutral-400" style="">Modern &amp; Fair</p>
-                     </div>
-                  </div>
-                  <div class="px-3 py-1 rounded-full text-white text-[10px] font-bold tracking-wide uppercase bg-neutral-500" style="">
-                     Recommended
-                  </div>
-               </div>
+                <details class="group bg-white rounded-2xl border border-gray-100 p-4 [&amp;_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex items-center justify-between cursor-pointer list-none text-gray-900 font-medium">
+                        <span>How fast does Listo respond to new leads?</span>
+                        <span class="transition group-open:rotate-180">
+                            <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon>
+                        </span>
+                    </summary>
+                    <div class="text-gray-500 text-sm mt-3 leading-relaxed">
+                        Within seconds. AI voice agents call and follow up instantly, 24/7.
+                    </div>
+                </details>
 
-               <ul class="space-y-6">
-                  <li class="flex items-start gap-4">
-                     <iconify-icon icon="solar:check-circle-bold" class="mt-1 shrink-0 text-neutral-500" width="20" style=""></iconify-icon>
-                     <div>
-                        <p class="font-semibold dark:text-white text-lg text-neutral-900" style="">90% Commission Kept</p>
-                        <p class="text-xs mt-1 text-neutral-500 dark:text-neutral-400" style="">A simple, flat 10% broker fee. You keep the lion's share.</p>
-                     </div>
-                  </li>
-                  <li class="flex items-start gap-4">
-                     <iconify-icon icon="solar:check-circle-bold" class="mt-1 shrink-0 text-neutral-500" width="20" style=""></iconify-icon>
-                     <div>
-                        <p class="font-semibold dark:text-white text-lg text-neutral-900" style="">$0 Monthly Cost</p>
-                        <p class="text-xs mt-1 text-neutral-500 dark:text-neutral-400" style="">No desk fees. No hidden costs. Pay only when you close.</p>
-                     </div>
-                  </li>
-                  
-                  
-               </ul>
+                <details class="group bg-white rounded-2xl border border-gray-100 p-4 [&amp;_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex items-center justify-between cursor-pointer list-none text-gray-900 font-medium">
+                        <span>Do I still control my clients and deals?</span>
+                        <span class="transition group-open:rotate-180">
+                            <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon>
+                        </span>
+                    </summary>
+                    <div class="text-gray-500 text-sm mt-3 leading-relaxed">
+                        Yes. You fully own your relationships and transactions.
+                    </div>
+                </details>
 
-               <div class="mt-8 pt-6 border-t border-neutral-500/20" style="">
-                  <div class="flex items-center justify-between">
-                     <span class="text-sm text-neutral-500 dark:text-neutral-400" style="">Avg. Agent Savings</span>
-                     <span class="text-2xl font-bold text-neutral-600 dark:text-neutral-400" style="">+$24k<span class="text-sm font-normal text-neutral-400" style="">/yr</span></span>
-                  </div>
-               </div>
-             </div>
-          </div>
-       </div>
+                <details class="group bg-white rounded-2xl border border-gray-100 p-4 [&amp;_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex items-center justify-between cursor-pointer list-none text-gray-900 font-medium">
+                        <span>Can I switch brokerages easily?</span>
+                        <span class="transition group-open:rotate-180">
+                            <iconify-icon icon="solar:alt-arrow-down-linear"></iconify-icon>
+                        </span>
+                    </summary>
+                    <div class="text-gray-500 text-sm mt-3 leading-relaxed">
+                        Yes. Listo assists with onboarding, compliance, and a smooth transition.
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- Signup Section / CTA -->
+        <section class="text-center pt-10 pb-10 space-y-8" id="signup">
+            <div class="space-y-4">
+                <h2 class="section-title text-center">Create Your Listo Account</h2>
+                <p class="section-lead text-center max-w-md mx-auto">Start in seconds. No long forms. No subscription fees.</p>
+            </div>
+            
+            <div class="max-w-md mx-auto bg-white p-2 rounded-2xl border border-gray-200 shadow-xl shadow-gray-200/50">
+                <div class="flex gap-2">
+                    <input type="tel" placeholder="Enter your phone number" class="flex-1 bg-transparent px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none text-base">
+                    <button onclick="toggleModal(true)" class="bg-black text-white px-6 py-3 rounded-xl font-medium hover:bg-gray-800 transition-colors whitespace-nowrap">
+                        Get Started
+                    </button>
+                </div>
+            </div>
+            <p class="text-xs text-gray-400">By continuing, you agree to Listo’s terms of service.</p>
+        </section>
+
+    </main>
+
+    <!-- Mobile: fixed floating Mona contact bar -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 px-4 pb-4 pt-3 bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.08)] safe-area-pb">
+        <a href="tel:289-894-7430" class="mona-card-sweep relative flex items-center gap-3 w-full bg-white rounded-2xl pl-2 pr-3 py-3 border border-gray-100 shadow-sm active:scale-[0.98] transition-transform">
+            <!-- Small head left side -->
+            <div class="relative flex-shrink-0 -ml-1">
+                <img src="assets/headshot-mona.png" alt="Mona Hesam" class="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-md">
+                <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></span>
+            </div>
+            <div class="flex items-center justify-between gap-3 flex-1 min-w-0">
+                <div class="min-w-0">
+                    <p class="text-orange-600 text-xs font-bold leading-tight mb-0.5">Join Listo Brokerage &amp; Get 1000$ Bonus!</p>
+                    <p class="font-semibold text-gray-900 text-sm">Mona Hesam</p>
+                    <p class="text-xs text-gray-500">VP &amp; Business Development · Tap to call</p>
+                </div>
+                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center">
+                    <iconify-icon icon="solar:phone-linear" width="20"></iconify-icon>
+                </div>
+            </div>
+        </a>
     </div>
-  </section>
 
-  <!-- CTA / FOOTER -->
-  <footer class="py-24 border-t dark:border-white/5 relative overflow-hidden border-neutral-200" style="">
-    <div class="absolute inset-0 dark:bg-[#030610] -z-10 bg-neutral-50/50" style=""></div>
-    <div class="max-w-2xl mx-auto px-6 text-center">
-       <h2 class="text-4xl md:text-5xl font-semibold tracking-tight dark:text-white mb-6 text-neutral-900" style="">Instantly Join Listo</h2>
-       <p class="text-lg font-light mb-10 text-neutral-600 dark:text-neutral-400" style="">
-          Provide your mobile number to begin onboarding. <br>
-          <span class="text-sm opacity-70">No credit check. No membership fees. No contracts.</span>
-       </p>
+    <!-- Footer -->
+    <footer class="w-full border-t border-gray-200 bg-white py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-start justify-between gap-12">
+            
+            <!-- Brand -->
+            <div class="space-y-4 max-w-xs">
+                <a href="#" class="flex items-center gap-2">
+                    <div class="w-6 h-6 bg-black text-white rounded flex items-center justify-center">
+                        <iconify-icon icon="solar:bolt-bold" width="14"></iconify-icon>
+                    </div>
+                    <span class="font-bold text-lg text-gray-900">Listo OS</span>
+                </a>
+                <p class="text-sm text-gray-500">
+                    Redefining Real Estate With AI. Canada's brokerage for the modern realtor.
+                </p>
+                <div class="text-sm text-gray-400 pt-4">
+                    © 2026 Listo. All rights reserved.
+                </div>
+            </div>
 
-       <form class="flex items-center p-1.5 bg-white dark:bg-[#0a0a0c] border dark:border-white/10 rounded-xl shadow-2xl input-group max-w-sm mx-auto mb-12 border-neutral-200" style="">
-          <div class="pl-4 text-neutral-400" style="">
-             <iconify-icon icon="solar:phone-calling-linear" width="20"></iconify-icon>
-          </div>
-          <input type="tel" placeholder="Mobile Number" class="w-full bg-transparent border-none focus:ring-0 text-sm dark:text-white px-3 py-3 outline-none text-neutral-900 placeholder:text-neutral-500" style="">
-          <button type="button" class="whitespace-nowrap text-white text-xs font-semibold px-6 py-3 rounded-lg transition-colors shadow-lg bg-neutral-600 hover:bg-neutral-500 shadow-neutral-500/20" style="">
-             Get Started
-          </button>
-       </form>
+            <!-- Contact (desktop only; mobile uses fixed bar below) -->
+            <div class="hidden md:block">
+                <div class="group bg-white/80 backdrop-blur-sm border border-gray-100 rounded-2xl p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.06)] hover:shadow-md hover:border-gray-200/80 transition-all duration-300 max-w-[280px]">
+                    <p class="text-xs font-semibold text-orange-600 uppercase tracking-wider mb-4">Get in touch</p>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                        <div class="relative flex-shrink-0">
+                            <img src="assets/headshot-mona.png" alt="Mona Hesam" class="w-20 h-20 rounded-2xl object-cover ring-2 ring-white shadow-lg">
+                            <span class="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-500 rounded-full border-2 border-white" title="Available"></span>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="font-semibold text-gray-900 text-base">Mona Hesam</p>
+                            <p class="text-sm text-gray-500 mb-3">VP &amp; Business Development</p>
+                            <div class="flex flex-col gap-2">
+                                <a href="tel:289-894-7430" class="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-orange-600 transition-colors">
+                                    <iconify-icon icon="solar:phone-linear" width="16"></iconify-icon>
+                                    289-894-7430
+                                </a>
+                                <a href="mailto:Mona@Listo.ca" class="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-orange-600 transition-colors">
+                                    <iconify-icon icon="solar:letter-linear" width="16"></iconify-icon>
+                                    Mona@Listo.ca
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-       <div class="pt-10 border-t dark:border-white/5 flex flex-col md:flex-row justify-between items-center text-xs border-neutral-200 text-neutral-500 dark:text-neutral-400" style="">
-          <div class="flex items-center gap-2 mb-4 md:mb-0">
-             <span class="font-semibold dark:text-white text-neutral-900" style="">LISTO</span>
-             <span>© 2024</span>
-          </div>
-          <div class="flex gap-6">
-             <a href="#" class="dark:hover:text-white transition-colors hover:text-neutral-900" style="">Privacy</a>
-             <a href="#" class="dark:hover:text-white transition-colors hover:text-neutral-900" style="">Terms</a>
-             <span class="opacity-50">We respect your privacy and do not send spam.</span>
-          </div>
-       </div>
-    </div>
-  </footer>
+            <!-- Links -->
+            <div class="flex gap-8 text-sm">
+                <div class="space-y-4">
+                    <h4 class="font-semibold text-gray-900">Product</h4>
+                    <ul class="space-y-2 text-gray-500">
+                        <li><a href="#" class="hover:text-black">Features</a></li>
+                        <li><a href="#" class="hover:text-black">AI Marketing</a></li>
+                        <li><a href="#" class="hover:text-black">Intelligence</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-4">
+                    <h4 class="font-semibold text-gray-900">Legal</h4>
+                    <ul class="space-y-2 text-gray-500">
+                        <li><a href="#" class="hover:text-black">Privacy</a></li>
+                        <li><a href="#" class="hover:text-black">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-  <script>
-    // Theme Logic
-    const themeBtn = document.getElementById('theme-toggle');
-    const html = document.getElementById('html-root');
+    <!-- Modal Implementation -->
+    <div id="modal-overlay" class="fixed inset-0 z-50 bg-[#F9FAFB]/80 backdrop-blur-md transition-all duration-300 overlay-enter" onclick="toggleModal(false)"></div>
     
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      html.classList.add('dark');
-    } else {
-      html.classList.remove('dark');
-    }
+    <div id="modal-content" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[51] w-full max-w-sm px-4 transition-all duration-300 modal-enter">
+        <div class="bg-white rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] p-8 md:p-10 flex flex-col items-center text-center relative overflow-hidden border border-gray-100 min-h-[420px] justify-center">
+            
+            <!-- Step 1: Phone -->
+            <div id="modal-step-1" class="w-full flex flex-col items-center transition-all duration-300 opacity-100 transform translate-x-0">
+                <div class="w-12 h-12 bg-black text-white rounded-xl flex items-center justify-center mb-6">
+                    <iconify-icon icon="solar:bolt-bold" width="24"></iconify-icon>
+                </div>
+                <h3 class="text-2xl font-bold tracking-tight text-gray-900 mb-2">Get Started</h3>
+                <p class="font-quicksand text-sm text-gray-500 font-medium mb-8 leading-snug">
+                    Enter your phone number to begin application.
+                </p>
+                <div class="w-full space-y-4">
+                    <input id="input-phone" type="tel" placeholder="Phone Number" class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-100 text-gray-900 placeholder:text-gray-400 font-medium focus:outline-none focus:border-black transition-colors bg-gray-50 focus:bg-white">
+                    <button onclick="nextStep()" class="w-full bg-black text-white py-3.5 rounded-xl font-medium hover:bg-gray-800 transition-colors shadow-lg shadow-gray-200">
+                        Continue
+                    </button>
+                </div>
+            </div>
 
-    themeBtn.addEventListener('click', () => {
-      if (html.classList.contains('dark')) {
-        html.classList.remove('dark');
-        localStorage.theme = 'light';
-      } else {
-        html.classList.add('dark');
-        localStorage.theme = 'dark';
-      }
-    });
+            <!-- Step 2: Name -->
+            <div id="modal-step-2" class="w-full flex-col items-center hidden opacity-0 transform translate-x-10 transition-all duration-300 absolute inset-0 justify-center p-8">
+                <h3 class="text-2xl font-bold tracking-tight text-gray-900 mb-2">Almost done</h3>
+                <p class="font-quicksand text-sm text-gray-500 font-medium mb-8 leading-snug">
+                    What should we call you?
+                </p>
+                <div class="w-full space-y-4">
+                    <input id="input-name" type="text" placeholder="Full Name" class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-100 text-gray-900 placeholder:text-gray-400 font-medium focus:outline-none focus:border-black transition-colors bg-gray-50 focus:bg-white">
+                    <button onclick="submitForm()" class="w-full bg-black text-white py-3.5 rounded-xl font-medium hover:bg-gray-800 transition-colors shadow-lg shadow-gray-200">
+                        Create My Account
+                    </button>
+                </div>
+                <button onclick="prevStep()" class="mt-4 text-xs text-gray-400 hover:text-black">Back</button>
+            </div>
 
-    // Mouse Tracking for Spotlight
-    document.addEventListener('mousemove', (e) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      document.body.style.setProperty('--mouse-x', `${x}px`);
-      document.body.style.setProperty('--mouse-y', `${y}px`);
-    });
+            <!-- Success -->
+            <div id="modal-success" class="w-full flex-col items-center hidden opacity-0 transition-opacity duration-300 absolute inset-0 justify-center p-8 text-center">
+                <div class="w-16 h-16 bg-green-50 text-green-600 rounded-full flex items-center justify-center mb-6">
+                    <iconify-icon icon="solar:check-circle-bold" width="32"></iconify-icon>
+                </div>
+                <h3 class="text-2xl font-semibold tracking-tight text-gray-900 mb-2">Welcome to Listo</h3>
+                <p class="font-quicksand text-sm text-gray-500 font-medium mb-8 leading-snug max-w-[260px] mx-auto">
+                    Your account is being created. Our AI will reach out shortly to help you get set up.
+                </p>
+                <button onclick="toggleModal(false)" class="text-sm font-semibold text-gray-900 hover:underline">
+                    Close
+                </button>
+            </div>
 
-    // 3D Tilt Logic
-    document.addEventListener('DOMContentLoaded', () => {
-      const dashboard = document.querySelector('.dashboard-ui');
-      if (!dashboard) return;
-      
-      let currentScale = 0.92;
-      let currentRot = 20;
-      let targetScale = 0.92;
-      let targetRot = 20;
-      let isHovered = false;
+        </div>
+    </div>
 
-      dashboard.addEventListener('mouseenter', () => isHovered = true);
-      dashboard.addEventListener('mouseleave', () => isHovered = false);
+    <script>
+        // Hero: cycle CRM → Autopilot System → Operating System every 3s
+        (function() {
+            var wrap = document.getElementById('hero-rotating-wrap');
+            if (!wrap) return;
+            var words = wrap.querySelectorAll('.hero-rotating-word');
+            var n = words.length;
+            if (n === 0) return;
+            var idx = 0;
+            setInterval(function() {
+                words[idx].classList.add('hero-rotating-hidden');
+                idx = (idx + 1) % n;
+                words[idx].classList.remove('hero-rotating-hidden');
+            }, 3000);
+        })();
 
-      const loop = () => {
-        // Simple easing loop
-        const maxScale = 1.0;
-        const baseScale = 0.92;
-        const baseRot = 20;
-        const activeRot = 5;
+        function toggleModal(show) {
+            const overlay = document.getElementById('modal-overlay');
+            const content = document.getElementById('modal-content');
+            
+            if (show) {
+                // Reset views
+                document.getElementById('modal-step-1').classList.remove('hidden', 'opacity-0', '-translate-x-10');
+                document.getElementById('modal-step-2').classList.add('hidden', 'opacity-0', 'translate-x-10');
+                document.getElementById('modal-step-2').classList.remove('flex');
+                document.getElementById('modal-success').classList.add('hidden', 'opacity-0');
+                document.getElementById('modal-success').classList.remove('flex');
 
-        targetScale = isHovered ? maxScale : baseScale;
-        targetRot = isHovered ? activeRot : baseRot;
+                overlay.classList.remove('overlay-enter');
+                overlay.classList.add('overlay-active');
+                content.classList.remove('modal-enter');
+                content.classList.add('modal-active');
+            } else {
+                overlay.classList.remove('overlay-active');
+                overlay.classList.add('overlay-enter');
+                content.classList.remove('modal-active');
+                content.classList.add('modal-enter');
+            }
+        }
 
-        currentScale += (targetScale - currentScale) * 0.05;
-        currentRot += (targetRot - currentRot) * 0.05;
+        function nextStep() {
+            const step1 = document.getElementById('modal-step-1');
+            const step2 = document.getElementById('modal-step-2');
 
-        dashboard.style.transform = `rotateX(${currentRot.toFixed(2)}deg) scale(${currentScale.toFixed(3)})`;
-        requestAnimationFrame(loop);
-      };
-      loop();
-    });
-  </script>
+            step1.classList.add('opacity-0', '-translate-x-10');
+            setTimeout(() => {
+                step1.classList.add('hidden');
+                step1.classList.remove('flex');
+                
+                step2.classList.remove('hidden');
+                step2.classList.add('flex');
+                // trigger reflow
+                void step2.offsetWidth;
+                step2.classList.remove('opacity-0', 'translate-x-10');
+            }, 300);
+        }
 
+        function prevStep() {
+            const step1 = document.getElementById('modal-step-1');
+            const step2 = document.getElementById('modal-step-2');
+
+            step2.classList.add('opacity-0', 'translate-x-10');
+            setTimeout(() => {
+                step2.classList.add('hidden');
+                step2.classList.remove('flex');
+                
+                step1.classList.remove('hidden');
+                step1.classList.add('flex');
+                // trigger reflow
+                void step1.offsetWidth;
+                step1.classList.remove('opacity-0', '-translate-x-10');
+            }, 300);
+        }
+
+        function submitForm() {
+            const step2 = document.getElementById('modal-step-2');
+            const success = document.getElementById('modal-success');
+
+            step2.classList.add('opacity-0');
+            setTimeout(() => {
+                step2.classList.remove('flex');
+                step2.classList.add('hidden');
+                
+                success.classList.remove('hidden');
+                success.classList.add('flex');
+                void success.offsetWidth;
+                success.classList.remove('opacity-0');
+            }, 300);
+        }
+
+        // Scroll-triggered reveal for "How Listo AI Works" steps
+        (function() {
+            var revealEls = document.querySelectorAll('.listo-step, .listo-step-header');
+            if (!revealEls.length) return;
+            var revealObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('step-visible');
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+            revealEls.forEach(function(el) { revealObserver.observe(el); });
+
+            // Active step while scrolling – orange highlight on the step most in view
+            var stepEls = document.querySelectorAll('.listo-step');
+            if (!stepEls.length) return;
+            var activeObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    entry.target._listoRatio = entry.isIntersecting ? entry.intersectionRatio : 0;
+                });
+                var best = null, bestRatio = 0;
+                stepEls.forEach(function(el) {
+                    var r = el._listoRatio || 0;
+                    if (r > bestRatio) { bestRatio = r; best = el; }
+                });
+                stepEls.forEach(function(el) {
+                    if (el === best) el.classList.add('step-active');
+                    else el.classList.remove('step-active');
+                });
+            }, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1], rootMargin: '-15% 0px -35% 0px' });
+            stepEls.forEach(function(el) { activeObserver.observe(el); });
+        })();
+    </script>
 </body></html>
